@@ -29,12 +29,12 @@
         <TextBlock Grid.Row="1" Grid.Column="1" Text="File:" HorizontalAlignment="Right" VerticalAlignment="Center"/>
         <TextBlock Grid.Row="2" Grid.Column="1" Text="Words:" HorizontalAlignment="Right" VerticalAlignment="Center"/>
         <TextBlock Grid.Row="3" Grid.Column="1" Text="Tags:" HorizontalAlignment="Right" VerticalAlignment="Center"/>
-        <TextBox Grid.Row="0" Grid.Column="2" Text="[Dictionary name]" HorizontalAlignment="Stretch" Margin="8,0"/>
+        <TextBox Grid.Row="0" Grid.Column="2" Text="{x:Bind ViewModel.DictionaryName, Mode=TwoWay}" HorizontalAlignment="Stretch" Margin="8,0"/>
         <TextBlock Grid.Row="1" Grid.Column="2" Text="[File path]" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0"/>
         <TextBlock Grid.Row="2" Grid.Column="2" Text="[Words count]" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0"/>
         <TextBlock Grid.Row="3" Grid.Column="2" Text="[Tags count]" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0"/>
         <StackPanel Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" Orientation="Horizontal" Spacing="4" Padding="12">
-            <Button Content="New"/>
+            <Button Content="New" Command="{x:Bind ViewModel.NewDictionaryCommand}"/>
             <Button Content="Export"/>
             <Button Content="Import"/>
             <Button Content="Load"/>
