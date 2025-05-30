@@ -1,0 +1,30 @@
+﻿{
+  "name": "Test Dictionary Japanese-English",
+  "words": [
+    {
+      "word": "はな",
+      "meanings": [ "flower", "gėlė" ],
+      "tags": [ "Tango 1" ]
+    },
+    {
+      "word": "いく",
+      "meanings": [ "to go", "eiti" ],
+      "tags": [ "Tango 1" ]
+    },
+    {
+      "word": "らやうと　てすと",
+      "meanings": [ "layout test", "išdėliojimo testas" ],
+      "tags": [ "Tag test", "Dummy tag loooooong", "3rd tag", "sm" ]
+    },
+    {
+      "word": "らやうと　てすと",
+      "meanings": [ "layout test", "išdėliojimo testas" ],
+      "tags": [ "Tag test", "Tag test" ]
+    },
+    {
+      "word": "らやうと　てすと",
+      "meanings": [ "layout test", "išdėliojimo testas" ],
+      "tags": [ "Tag test", "Tag test", "Tag test"]
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "LanguageLearn2 (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "LanguageLearn2 (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

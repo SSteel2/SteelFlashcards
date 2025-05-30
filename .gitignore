@@ -1,0 +1,4 @@
+SteelFlashcards/bin/*
+SteelFlashcards/obj/*
+.vs
+*_backup.json
