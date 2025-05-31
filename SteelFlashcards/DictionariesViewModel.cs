@@ -21,10 +21,10 @@ namespace LanguageLearn2
         public ObservableCollection<DictionaryFile> DictionaryFiles { get { return m_dictionaryFiles; } }
 
         [ObservableProperty]
-        private string newDictionaryName;
+        private string? newDictionaryName;
 
         [ObservableProperty]
-        private string renameDictionaryName;
+        private string? renameDictionaryName;
 
         [ObservableProperty]
         private DictionaryFile? selectedDictionary;
@@ -36,14 +36,11 @@ namespace LanguageLearn2
         {
             _dataService = dataService;
             _navigationService = navigationService;
+            
             m_dictionaryFiles = [];
-            ReadDictionaries();
-            // TODO: edge case if no dictionaries exist, copy template
-            // For simplicity sake, the first dictionary is the selected dictionary for now
-            selectedDictionary = m_dictionaryFiles[0];
-            LoadedDictionary = m_dictionaryFiles[0];
-            m_dictionaryFiles[0].IsLoaded = true;
-            //DictionaryName = selectedDictionary.Content.Name;
+            foreach (var dictionaryFile in _dataService.GetDictionaries())
+                m_dictionaryFiles.Add(dictionaryFile);
+            LoadedDictionary = _dataService.GetLoadedDictionary();
         }
 
         // TODO: Missing CanExecute
@@ -52,26 +49,20 @@ namespace LanguageLearn2
         {
             if (string.IsNullOrWhiteSpace(NewDictionaryName))
                 return; // TODO: maybe some better indication of bad name
-            string applicationUserDictionariesFolder = GetDictionariesDirectory();
-            var dictionary = new DictionaryEntry(NewDictionaryName, []);
-            string serializedDictionary = JsonSerializer.Serialize(dictionary);
-            string dictionaryFullPath = Path.Combine(applicationUserDictionariesFolder, SanitizeFileName(NewDictionaryName) + ".json");
-            // TODO: edge case. Check if file exists
-            File.WriteAllText(dictionaryFullPath, serializedDictionary);
-            var dictionaryFile = ReadDictionary(dictionaryFullPath);
+            
+            var dictionaryFile = _dataService.NewDictionary(NewDictionaryName);
             if (dictionaryFile != null)
                 m_dictionaryFiles.Add(dictionaryFile);
         }
 
+        // TODO: missing can exceute
         [RelayCommand]
         public void RenameDictionary()
         {
             if (string.IsNullOrWhiteSpace(RenameDictionaryName) || string.Equals(SelectedDictionary.Content.Name, RenameDictionaryName))
                 return; // TODO: maybe some better indication of bad name
-            SelectedDictionary.Content.Name = RenameDictionaryName;
-            SelectedDictionary.DictionaryName = RenameDictionaryName;
-            string serializedDictionary = JsonSerializer.Serialize(SelectedDictionary.Content);
-            File.WriteAllText(SelectedDictionary.FileName, serializedDictionary);
+
+            _dataService.RenameDictionary(SelectedDictionary, RenameDictionaryName);
         }
 
         [RelayCommand]
@@ -79,86 +70,20 @@ namespace LanguageLearn2
         {
             if (SelectedDictionary == null)
                 return;
-            bool isDeletedLoaded = SelectedDictionary == LoadedDictionary;
-            File.Delete(SelectedDictionary.FileName);
+            _dataService.DeleteDictionary(SelectedDictionary);
             m_dictionaryFiles.Remove(SelectedDictionary);
-            if (isDeletedLoaded)
-            {
-                if (m_dictionaryFiles.Count > 0)
-                {
-                    LoadedDictionary = m_dictionaryFiles[0];
-                    LoadedDictionary.IsLoaded = true;
-                }
-                else
-                {
-                    LoadedDictionary = null;
-                }
-            }
+            LoadedDictionary = _dataService.GetLoadedDictionary();
         }
 
+        // TODO: Missing can execute
         [RelayCommand]
         public void LoadDictionary()
         {
             if (SelectedDictionary == LoadedDictionary)
                 return;
 
-            if (LoadedDictionary != null)
-                LoadedDictionary.IsLoaded = false;
-            LoadedDictionary = SelectedDictionary;
-            LoadedDictionary.IsLoaded = true;
-        }
-
-        private void ReadDictionaries()
-        {
-            string applicationUserDictionariesFolder = GetDictionariesDirectory();
-            string[] allFiles = Directory.GetFiles(applicationUserDictionariesFolder);
-            foreach (string file in allFiles)
-            {
-                var dictionaryFile = ReadDictionary(file);
-                if (dictionaryFile != null)
-                {
-                    m_dictionaryFiles.Add(dictionaryFile);
-                }
-            }
-        }
-
-        private DictionaryFile? ReadDictionary(string fileName)
-        {
-            string content = File.ReadAllText(fileName);
-            DictionaryEntry? dictionaryEntry = JsonSerializer.Deserialize<DictionaryEntry>(content);
-            if (dictionaryEntry == null)
-                return null;
-            // TODO: what happens on malformed files - exception handling needed
-            var dictionaryFile = new DictionaryFile
-            {
-                Content = dictionaryEntry,
-                DictionaryName = dictionaryEntry.Name,
-                FileName = fileName
-            };
-            return dictionaryFile;
-        }
-
-        private string GetDictionariesDirectory()
-        {
-            // TODO: exception handling is seriously missing in here
-            string documentsFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            string applicationUserFolder = Path.Combine(documentsFolderPath, "Steel Flashcards");
-            if (!Directory.Exists(applicationUserFolder))
-                Directory.CreateDirectory(applicationUserFolder);
-            string applicationUserDictionariesFolder = Path.Combine(applicationUserFolder, "Dictionaries");
-            if (!Directory.Exists(@applicationUserDictionariesFolder))
-                Directory.CreateDirectory(@applicationUserDictionariesFolder);
-            return applicationUserDictionariesFolder;
-        }
-
-        private string SanitizeFileName(string fileName)
-        {
-            string sanitizedFileName = fileName;
-            foreach (char c in Path.GetInvalidFileNameChars())
-            {
-                sanitizedFileName = sanitizedFileName.Replace(c, '_');
-            }
-            return sanitizedFileName;
+            _dataService.LoadDictionary(SelectedDictionary);
+            LoadedDictionary = _dataService.GetLoadedDictionary();
         }
     }
 }

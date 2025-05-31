@@ -49,14 +49,6 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <!--<TextBlock Grid.Row="0" Grid.Column="1" Text="Name:" HorizontalAlignment="Right" VerticalAlignment="Center"/>
-        <TextBlock Grid.Row="1" Grid.Column="1" Text="File:" HorizontalAlignment="Right" VerticalAlignment="Center"/>
-        <TextBlock Grid.Row="2" Grid.Column="1" Text="Words:" HorizontalAlignment="Right" VerticalAlignment="Center"/>
-        <TextBlock Grid.Row="3" Grid.Column="1" Text="Tags:" HorizontalAlignment="Right" VerticalAlignment="Center"/>
-        <TextBox Grid.Row="0" Grid.Column="2" Text="{x:Bind ViewModel.SelectedDictionary.Content.Name, Mode=TwoWay}" HorizontalAlignment="Stretch" Margin="8,0"/>
-        <TextBlock Grid.Row="1" Grid.Column="2" Text="{x:Bind ViewModel.SelectedDictionary.FileName, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0"/>
-        <TextBlock Grid.Row="2" Grid.Column="2" Text="{x:Bind ViewModel.SelectedDictionary.WordCount, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0"/>
-        <TextBlock Grid.Row="3" Grid.Column="2" Text="{x:Bind ViewModel.SelectedDictionary.TagCount, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0"/>-->
         <StackPanel Grid.Row="1" HorizontalAlignment="Right" Orientation="Horizontal" Spacing="4" Padding="12">
             <Button Content="New">
                 <!--TODO: Extract flyout to a component-->
