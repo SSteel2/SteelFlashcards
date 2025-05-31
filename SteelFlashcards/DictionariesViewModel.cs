@@ -16,18 +16,79 @@ namespace LanguageLearn2
         private IDataService _dataService;
         private INavigationService _navigationService;
 
+        private ObservableCollection<DictionaryFile> m_dictionaryFiles;
+        public ObservableCollection<DictionaryFile> DictionaryFiles { get { return m_dictionaryFiles; } }
+
+        // Not properly used
         [ObservableProperty]
         private string dictionaryName;
+
+        [ObservableProperty]
+        private DictionaryFile selectedDictionary;
+
+        [ObservableProperty]
+        private DictionaryFile loadedDictionary;
 
         public DictionariesViewModel(IDataService dataService, INavigationService navigationService)
         {
             _dataService = dataService;
             _navigationService = navigationService;
+            m_dictionaryFiles = [];
+            ReadDictionaries();
+            // TODO: edge case if no dictionaries exist, copy template
+            // For simplicity sake, the first dictionary is the selected dictionary for now
+            selectedDictionary = m_dictionaryFiles[0];
+            LoadedDictionary = m_dictionaryFiles[0];
+            m_dictionaryFiles[0].IsLoaded = true;
+            DictionaryName = selectedDictionary.Content.Name;
         }
 
         // TODO: Missing CanExecute
         [RelayCommand]
         public void NewDictionary()
+        {
+            // TODO: change dictionary name to a flyout control
+            string applicationUserDictionariesFolder = GetDictionariesDirectory();
+            var dictionary = new DictionaryEntry(DictionaryName, []);
+            string serializedDictionary = JsonSerializer.Serialize(dictionary);
+            string dictionaryFullPath = Path.Combine(applicationUserDictionariesFolder, SanitizeFileName(DictionaryName) + ".json");
+            File.WriteAllText(dictionaryFullPath, serializedDictionary);
+        }
+
+        [RelayCommand]
+        public void LoadDictionary()
+        {
+
+        }
+
+        private void ReadDictionaries()
+        {
+            string applicationUserDictionariesFolder = GetDictionariesDirectory();
+            string[] allFiles = Directory.GetFiles(applicationUserDictionariesFolder);
+            foreach (string file in allFiles)
+            {
+                var dictionaryFile = ReadDictionary(file);
+                if (dictionaryFile != null)
+                {
+                    m_dictionaryFiles.Add(dictionaryFile);
+                }
+            }
+        }
+
+        private DictionaryFile? ReadDictionary(string fileName)
+        {
+            string content = File.ReadAllText(fileName);
+            DictionaryEntry? dictionaryEntry = JsonSerializer.Deserialize<DictionaryEntry>(content);
+            if (dictionaryEntry == null)
+                return null;
+            // TODO: what happens on malformed files - exception handling needed
+            var dictionaryFile = new DictionaryFile();
+            dictionaryFile.Content = dictionaryEntry;
+            dictionaryFile.FileName = fileName;
+            return dictionaryFile;
+        }
+
+        private string GetDictionariesDirectory()
         {
             // TODO: exception handling is seriously missing in here
             string documentsFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
@@ -37,10 +98,7 @@ namespace LanguageLearn2
             string applicationUserDictionariesFolder = Path.Combine(applicationUserFolder, "Dictionaries");
             if (!Directory.Exists(@applicationUserDictionariesFolder))
                 Directory.CreateDirectory(@applicationUserDictionariesFolder);
-            var dictionary = new DictionaryEntry(DictionaryName, []);
-            string serializedDictionary = JsonSerializer.Serialize(dictionary);
-            string dictionaryFullPath = Path.Combine(applicationUserDictionariesFolder, SanitizeFileName(DictionaryName) + ".json");
-            File.WriteAllText(dictionaryFullPath, serializedDictionary);
+            return applicationUserDictionariesFolder;
         }
 
         private string SanitizeFileName(string fileName)

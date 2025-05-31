@@ -64,4 +64,35 @@ namespace LanguageLearn2
             WordEntries = wordEntries;
         }
     }
+
+    public class DictionaryFile
+    {
+        public string FileName { get; set; }
+
+        public DictionaryEntry Content { get; set; }
+
+        public bool IsLoaded { get; set; } = false;
+
+        public int WordCount { get { return Content.WordEntries.Count; } }
+
+        private int m_tagCount = -1;
+        public int TagCount
+        {
+            get
+            {
+                if (m_tagCount == -1)
+                    m_tagCount = GetTagCount();
+                return m_tagCount;
+            }
+        }
+
+        public int GetTagCount()
+        {
+            var tagSet = new HashSet<string>();
+            foreach (var wordEntry in Content.WordEntries)
+                foreach (string tag in wordEntry.Tags)
+                    tagSet.Add(tag);
+            return tagSet.Count;
+        }
+    }
 }
