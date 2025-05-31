@@ -19,9 +19,8 @@ namespace LanguageLearn2
         private ObservableCollection<DictionaryFile> m_dictionaryFiles;
         public ObservableCollection<DictionaryFile> DictionaryFiles { get { return m_dictionaryFiles; } }
 
-        // Not properly used
         [ObservableProperty]
-        private string dictionaryName;
+        private string newDictionaryName;
 
         [ObservableProperty]
         private DictionaryFile selectedDictionary;
@@ -47,12 +46,14 @@ namespace LanguageLearn2
         [RelayCommand]
         public void NewDictionary()
         {
-            // TODO: change dictionary name to a flyout control
             string applicationUserDictionariesFolder = GetDictionariesDirectory();
-            var dictionary = new DictionaryEntry(DictionaryName, []);
+            var dictionary = new DictionaryEntry(NewDictionaryName, []);
             string serializedDictionary = JsonSerializer.Serialize(dictionary);
-            string dictionaryFullPath = Path.Combine(applicationUserDictionariesFolder, SanitizeFileName(DictionaryName) + ".json");
+            string dictionaryFullPath = Path.Combine(applicationUserDictionariesFolder, SanitizeFileName(NewDictionaryName) + ".json");
             File.WriteAllText(dictionaryFullPath, serializedDictionary);
+            var dictionaryFile = ReadDictionary(dictionaryFullPath);
+            if (dictionaryFile != null)
+                m_dictionaryFiles.Add(dictionaryFile);
         }
 
         [RelayCommand]

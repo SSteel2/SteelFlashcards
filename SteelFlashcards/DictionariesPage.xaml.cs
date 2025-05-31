@@ -33,4 +33,9 @@ public sealed partial class DictionariesPage : Page
             throw new ApplicationException("Dev: Missing DictionariesViewModel Service");
         InitializeComponent();
     }
+
+    private void NewDictionaryAcceptButton_Click(object sender, RoutedEventArgs e)
+    {
+        NewDictionaryFlyout.Hide();
+    }
 }
