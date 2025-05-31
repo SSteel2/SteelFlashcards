@@ -6,24 +6,20 @@
     xmlns:local="using:LanguageLearn2"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:converters="using:CommunityToolkit.WinUI.Converters"
     mc:Ignorable="d">
 
+    <Page.Resources>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVis" />
+    </Page.Resources>
+
     <Grid>
-        <!--<Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="80"/>
-            <ColumnDefinition Width="4*"/>
-        </Grid.ColumnDefinitions>-->
         <Grid.RowDefinitions>
-            <!--<RowDefinition Height="Auto" MinHeight="32"/>
-            <RowDefinition Height="Auto" MinHeight="32"/>
-            <RowDefinition Height="Auto" MinHeight="32"/>
-            <RowDefinition Height="Auto" MinHeight="32"/>-->
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <!--TODO: Remake this into GridView maybe-->
-        <ListView Background="Gray" Margin="12" ItemsSource="{x:Bind ViewModel.DictionaryFiles, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedDictionary, Mode=TwoWay}">
+        <ListView Margin="12" ItemsSource="{x:Bind ViewModel.DictionaryFiles, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedDictionary, Mode=TwoWay}">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="local:DictionaryFile">
                     <Grid>
@@ -46,7 +42,7 @@
                         <TextBlock Grid.Row="1" Grid.Column="2" Text="Tags:" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                         <TextBlock Grid.Row="1" Grid.Column="3" Text="{x:Bind TagCount, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0"/>
                         <!--Last column for selected tag-->
-                        <Border Grid.Column="4" Grid.RowSpan="2" BorderThickness="1" BorderBrush="Black" Width="Auto" CornerRadius="12" VerticalAlignment="Center" Visibility="{x:Bind IsLoaded, Mode=OneWay}">
+                        <Border Grid.Column="4" Grid.RowSpan="2" BorderThickness="1" BorderBrush="Black" Width="Auto" CornerRadius="12" VerticalAlignment="Center" Visibility="{x:Bind IsLoaded, Mode=TwoWay, Converter={StaticResource BoolToVis}}">
                             <TextBlock Text="Loaded" Width="Auto" Padding="8,2" HorizontalAlignment="Center"/>
                         </Border>
                     </Grid>

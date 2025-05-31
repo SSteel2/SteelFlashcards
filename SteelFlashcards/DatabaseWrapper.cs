@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using CommunityToolkit.Mvvm.ComponentModel;
+using System.ComponentModel;
 
 namespace LanguageLearn2
 {
@@ -65,13 +67,14 @@ namespace LanguageLearn2
         }
     }
 
-    public class DictionaryFile
+    public partial class DictionaryFile : ObservableObject
     {
         public string FileName { get; set; }
 
         public DictionaryEntry Content { get; set; }
 
-        public bool IsLoaded { get; set; } = false;
+        [ObservableProperty]
+        private bool isLoaded;
 
         public int WordCount { get { return Content.WordEntries.Count; } }
 

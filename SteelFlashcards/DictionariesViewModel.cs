@@ -40,7 +40,7 @@ namespace LanguageLearn2
             selectedDictionary = m_dictionaryFiles[0];
             LoadedDictionary = m_dictionaryFiles[0];
             m_dictionaryFiles[0].IsLoaded = true;
-            DictionaryName = selectedDictionary.Content.Name;
+            //DictionaryName = selectedDictionary.Content.Name;
         }
 
         // TODO: Missing CanExecute
@@ -58,7 +58,12 @@ namespace LanguageLearn2
         [RelayCommand]
         public void LoadDictionary()
         {
+            if (SelectedDictionary == LoadedDictionary)
+                return;
 
+            LoadedDictionary.IsLoaded = false;
+            LoadedDictionary = SelectedDictionary;
+            LoadedDictionary.IsLoaded = true;
         }
 
         private void ReadDictionaries()
