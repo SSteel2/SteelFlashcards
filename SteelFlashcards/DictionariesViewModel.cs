@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -23,10 +24,13 @@ namespace LanguageLearn2
         private string newDictionaryName;
 
         [ObservableProperty]
-        private DictionaryFile selectedDictionary;
+        private string renameDictionaryName;
 
         [ObservableProperty]
-        private DictionaryFile loadedDictionary;
+        private DictionaryFile? selectedDictionary;
+
+        [ObservableProperty]
+        private DictionaryFile? loadedDictionary;
 
         public DictionariesViewModel(IDataService dataService, INavigationService navigationService)
         {
@@ -46,14 +50,50 @@ namespace LanguageLearn2
         [RelayCommand]
         public void NewDictionary()
         {
+            if (string.IsNullOrWhiteSpace(NewDictionaryName))
+                return; // TODO: maybe some better indication of bad name
             string applicationUserDictionariesFolder = GetDictionariesDirectory();
             var dictionary = new DictionaryEntry(NewDictionaryName, []);
             string serializedDictionary = JsonSerializer.Serialize(dictionary);
             string dictionaryFullPath = Path.Combine(applicationUserDictionariesFolder, SanitizeFileName(NewDictionaryName) + ".json");
+            // TODO: edge case. Check if file exists
             File.WriteAllText(dictionaryFullPath, serializedDictionary);
             var dictionaryFile = ReadDictionary(dictionaryFullPath);
             if (dictionaryFile != null)
                 m_dictionaryFiles.Add(dictionaryFile);
+        }
+
+        [RelayCommand]
+        public void RenameDictionary()
+        {
+            if (string.IsNullOrWhiteSpace(RenameDictionaryName) || string.Equals(SelectedDictionary.Content.Name, RenameDictionaryName))
+                return; // TODO: maybe some better indication of bad name
+            SelectedDictionary.Content.Name = RenameDictionaryName;
+            SelectedDictionary.DictionaryName = RenameDictionaryName;
+            string serializedDictionary = JsonSerializer.Serialize(SelectedDictionary.Content);
+            File.WriteAllText(SelectedDictionary.FileName, serializedDictionary);
+        }
+
+        [RelayCommand]
+        public void DeleteDictionary()
+        {
+            if (SelectedDictionary == null)
+                return;
+            bool isDeletedLoaded = SelectedDictionary == LoadedDictionary;
+            File.Delete(SelectedDictionary.FileName);
+            m_dictionaryFiles.Remove(SelectedDictionary);
+            if (isDeletedLoaded)
+            {
+                if (m_dictionaryFiles.Count > 0)
+                {
+                    LoadedDictionary = m_dictionaryFiles[0];
+                    LoadedDictionary.IsLoaded = true;
+                }
+                else
+                {
+                    LoadedDictionary = null;
+                }
+            }
         }
 
         [RelayCommand]
@@ -62,7 +102,8 @@ namespace LanguageLearn2
             if (SelectedDictionary == LoadedDictionary)
                 return;
 
-            LoadedDictionary.IsLoaded = false;
+            if (LoadedDictionary != null)
+                LoadedDictionary.IsLoaded = false;
             LoadedDictionary = SelectedDictionary;
             LoadedDictionary.IsLoaded = true;
         }
@@ -88,9 +129,12 @@ namespace LanguageLearn2
             if (dictionaryEntry == null)
                 return null;
             // TODO: what happens on malformed files - exception handling needed
-            var dictionaryFile = new DictionaryFile();
-            dictionaryFile.Content = dictionaryEntry;
-            dictionaryFile.FileName = fileName;
+            var dictionaryFile = new DictionaryFile
+            {
+                Content = dictionaryEntry,
+                DictionaryName = dictionaryEntry.Name,
+                FileName = fileName
+            };
             return dictionaryFile;
         }
 

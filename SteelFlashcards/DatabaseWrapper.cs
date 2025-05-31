@@ -76,6 +76,9 @@ namespace LanguageLearn2
         [ObservableProperty]
         private bool isLoaded;
 
+        [ObservableProperty]
+        private string dictionaryName;
+
         public int WordCount { get { return Content.WordEntries.Count; } }
 
         private int m_tagCount = -1;

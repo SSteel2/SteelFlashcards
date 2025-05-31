@@ -38,4 +38,9 @@ public sealed partial class DictionariesPage : Page
     {
         NewDictionaryFlyout.Hide();
     }
+
+    private void RenameDictionaryAcceptButton_Click(object sender, RoutedEventArgs e)
+    {
+        RenameDictionaryFlyout.Hide();
+    }
 }
