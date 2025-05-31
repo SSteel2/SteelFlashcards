@@ -1,14 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace LanguageLearn2
 {
@@ -55,17 +47,16 @@ namespace LanguageLearn2
                 m_dictionaryFiles.Add(dictionaryFile);
         }
 
-        // TODO: missing can exceute
-        [RelayCommand]
+        [RelayCommand(CanExecute = nameof(IsDictionarySelected))]
         public void RenameDictionary()
         {
-            if (string.IsNullOrWhiteSpace(RenameDictionaryName) || string.Equals(SelectedDictionary.Content.Name, RenameDictionaryName))
+            if (string.IsNullOrWhiteSpace(RenameDictionaryName) || string.Equals(SelectedDictionary!.Content.Name, RenameDictionaryName))
                 return; // TODO: maybe some better indication of bad name
 
             _dataService.RenameDictionary(SelectedDictionary, RenameDictionaryName);
         }
 
-        [RelayCommand]
+        [RelayCommand(CanExecute = nameof(IsDictionarySelected))]
         public void DeleteDictionary()
         {
             if (SelectedDictionary == null)
@@ -75,15 +66,19 @@ namespace LanguageLearn2
             LoadedDictionary = _dataService.GetLoadedDictionary();
         }
 
-        // TODO: Missing can execute
-        [RelayCommand]
+        [RelayCommand(CanExecute = nameof(IsDictionarySelected))]
         public void LoadDictionary()
         {
             if (SelectedDictionary == LoadedDictionary)
                 return;
 
-            _dataService.LoadDictionary(SelectedDictionary);
+            _dataService.LoadDictionary(SelectedDictionary!);
             LoadedDictionary = _dataService.GetLoadedDictionary();
+        }
+
+        private bool IsDictionarySelected()
+        {
+            return SelectedDictionary != null;
         }
     }
 }
