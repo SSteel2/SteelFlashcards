@@ -13,17 +13,24 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="3*"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="44"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
             <ColumnDefinition Width="360"/>
         </Grid.ColumnDefinitions>
         <TextBlock Name="WordBlock" Text="{x:Bind ViewModel.CurrentWord, Mode=OneWay}" Grid.Row="0" Grid.Column="0" FontSize="60" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-        <TextBox Name="GuessBox" Text="input?" Grid.Row="1" Grid.Column="0" FontSize="40" VerticalAlignment="Center" HorizontalAlignment="Center" MinWidth="600"/>
-        <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right">
-            <Button Content="Ok" Command="{x:Bind ViewModel.AcceptAnswerCommand}" CommandParameter="{x:Bind GuessBox.Text, Mode=OneWay}"/>
-            <Button Content="New" Command="{x:Bind ViewModel.NewAnswersCommand}" Name="NewButton"/>
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <TextBox Name="GuessBox" PlaceholderText="meaning" FontSize="40" MinWidth="600" KeyUp="GuessBox_KeyUp"/>
+            <Button Command="{x:Bind ViewModel.AcceptAnswerCommand}" CommandParameter="{x:Bind GuessBox.Text, Mode=OneWay}" VerticalAlignment="Stretch" Margin="8,0,0,0" Width="66">
+                <SymbolIcon Symbol="Forward"/>
+                <Button.KeyboardAccelerators>
+                    <KeyboardAccelerator Key="Enter"/>
+                </Button.KeyboardAccelerators>
+            </Button>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" Margin="20">
+            <Button Content="Reset" Command="{x:Bind ViewModel.NewAnswersCommand}" Name="NewButton"/>
         </StackPanel>
         <ListView Grid.Row="0" Grid.Column="1" Grid.RowSpan="3" Background="LightGray" ItemsSource="{x:Bind ViewModel.Answers}">
             <ListView.HeaderTemplate>

@@ -68,7 +68,7 @@ namespace LanguageLearn2
             IsDirty = true;
         }
 
-        private bool CanExecuteAcceptWordEntry()
+        public bool CanExecuteAcceptWordEntry()
         {
             return !string.IsNullOrWhiteSpace(NewWordText) && !string.IsNullOrWhiteSpace(NewMeaningText) && !string.IsNullOrWhiteSpace(NewTagsText);
         }

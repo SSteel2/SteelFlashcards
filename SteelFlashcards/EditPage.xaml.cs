@@ -43,5 +43,17 @@ namespace LanguageLearn2
         {
             ViewModel.DeleteWordEntry(((WordEntry)((FrameworkElement)((FrameworkElement)e.OriginalSource).Parent).Tag).LocalId);
         }
+
+        private void NewTags_KeyUp(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Enter && ViewModel.CanExecuteAcceptWordEntry())
+            {
+                ViewModel.AcceptWordEntry();
+                NewWord.Text = string.Empty;
+                NewMeaning.Text = string.Empty;
+                NewTags.Text = string.Empty;
+                NewWord.Focus(FocusState.Programmatic);
+            }
+        }
     }
 }

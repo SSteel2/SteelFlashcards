@@ -28,7 +28,6 @@ namespace LanguageLearn2
         List<WordEntry> _words = [];
         int currentWordNumber; // most likely should not be here
         int wordCount; // not needed
-        DictionaryEntry m_dictionary; // not needed
 
         IList<Answer> _answers;
 

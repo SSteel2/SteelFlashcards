@@ -28,10 +28,10 @@ namespace LanguageLearn2
     /// </summary>
     public partial class App : Application
     {
-        private MainWindow m_window;
-        private NavigationService m_navigationService;
+        private MainWindow? m_window;
+        private NavigationService? m_navigationService;
 
-        public static IServiceProvider ServiceProvider { get; private set; }
+        public static IServiceProvider? ServiceProvider { get; private set; }
 
         /// <summary>
         /// Initializes the singleton application object. This is the first line of authored code
@@ -49,6 +49,8 @@ namespace LanguageLearn2
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
             ServiceProvider = RegisterServices();
+            if (m_navigationService == null)
+                throw new ApplicationException("Navigation service failed to initiazlize");
             m_window = new MainWindow(m_navigationService);
             m_window.Activate();
         }

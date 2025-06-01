@@ -33,5 +33,14 @@ namespace LanguageLearn2
         }
 
         public LearnViewModel ViewModel;
+
+        private void GuessBox_KeyUp(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Enter)
+            {
+                ViewModel.AcceptAnswer(((TextBox)sender).Text);
+                ((TextBox)sender).Text = string.Empty;
+            }
+        }
     }
 }

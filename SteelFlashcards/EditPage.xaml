@@ -102,11 +102,14 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <TextBlock Text="Add new word" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="5" FontWeight="Bold" Margin="0,0,0,4"/>
-                <TextBox x:Name="NewWord" Text="{x:Bind ViewModel.NewWordText, Mode=TwoWay}" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
-                <TextBox x:Name="NewMeaning" Text="{x:Bind ViewModel.NewMeaningText, Mode=TwoWay}" Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
-                <TextBox x:Name="NewTags" Text="{x:Bind ViewModel.NewTagsText, Mode=TwoWay}" Grid.Column="2" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                <TextBox x:Name="NewWord" Text="{x:Bind ViewModel.NewWordText, Mode=TwoWay}" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="0,0,8,0"/>
+                <TextBox x:Name="NewMeaning" Text="{x:Bind ViewModel.NewMeaningText, Mode=TwoWay}" Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="0,0,8,0"/>
+                <TextBox x:Name="NewTags" Text="{x:Bind ViewModel.NewTagsText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="0,0,8,0" KeyUp="NewTags_KeyUp"/>
                 <Button Grid.Column="3" Grid.Row="1" Command="{x:Bind ViewModel.AcceptWordEntryCommand}">
                     <SymbolIcon Symbol="Accept"/>
+                    <Button.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="Enter"/>
+                    </Button.KeyboardAccelerators>
                 </Button>
                 <Button Grid.Column="4" Grid.Row="1" Command="{x:Bind ViewModel.RejectWordEntryCommand}">
                     <SymbolIcon Symbol="Cancel"/>
