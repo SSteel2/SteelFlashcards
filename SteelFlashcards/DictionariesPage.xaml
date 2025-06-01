@@ -31,12 +31,12 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <!--TODO: make it possible to rename in this view-->
                         <!--TODO: figure out a proper text size-->
-                        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" Text="{x:Bind DictionaryName, Mode=OneWay}" FontSize="20"/>
+                        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" Text="{x:Bind DictionaryName, Mode=OneWay}" FontSize="20" Margin="0,0,0,4"/>
                         <TextBlock Grid.Row="1" Grid.Column="0" Text="Words:" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                         <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind WordCount, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0"/>
                         <TextBlock Grid.Row="1" Grid.Column="2" Text="Tags:" HorizontalAlignment="Right" VerticalAlignment="Center"/>
@@ -48,6 +48,11 @@
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem" BasedOn="{StaticResource DefaultListViewItemStyle}">
+                    <Setter Property="Margin" Value="0,12,0,0"/>
+                </Style>
+            </ListView.ItemContainerStyle>
         </ListView>
         <StackPanel Grid.Row="1" HorizontalAlignment="Right" Orientation="Horizontal" Spacing="4" Padding="12">
             <Button Content="New">

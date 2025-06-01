@@ -17,6 +17,8 @@ namespace LanguageLearn2
         [ObservableProperty]
         private string? currentWord;
 
+        private WordEntry? m_currentWordEntry;
+
         private IList<WordEntry> m_words;
 
         private int m_wordIndex;
@@ -37,7 +39,11 @@ namespace LanguageLearn2
         [RelayCommand]
         public void AcceptAnswer(string guess)
         {
-            var answer = _dataService.AddAnswer(guess);
+            // Should never be null, will be removed once design changes
+            if (m_currentWordEntry == null)
+                return;
+
+            var answer = _dataService.AddAnswer(guess, m_currentWordEntry);
             answers.Add(answer);
             SetNextWord();
         }
@@ -58,7 +64,8 @@ namespace LanguageLearn2
                 CurrentWord = "[No Words in Dictionary]";
                 return;
             }
-            CurrentWord = m_words[m_wordIndex++].Word;
+            m_currentWordEntry = m_words[m_wordIndex++];
+            CurrentWord = m_currentWordEntry.Word;
             if (m_wordIndex >= m_words.Count)
                 m_wordIndex = 0;
         }

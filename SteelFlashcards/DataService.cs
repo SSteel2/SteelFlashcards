@@ -12,7 +12,7 @@ namespace LanguageLearn2
         void AddWordEntry(WordEntry wordEntry);
         void RemoveWordEntry(WordEntry wordEntry);
         IList<Answer> GetAnswers();
-        Answer AddAnswer(string guess);
+        Answer AddAnswer(string guess, WordEntry wordEntry);
         void ClearAnswers();
         void Save();
         DictionaryFile? NewDictionary(string newName);
@@ -89,15 +89,15 @@ namespace LanguageLearn2
             return _answers;
         }
 
-        public Answer AddAnswer(string guess)
+        public Answer AddAnswer(string guess, WordEntry wordEntry)
         {
-            int meaningIndex = _words[currentWordNumber].Meanings.IndexOf(guess);
+            int meaningIndex = wordEntry.Meanings.IndexOf(guess);
             string correctAnswer;
             if (meaningIndex == -1)
-                correctAnswer = _words[currentWordNumber].Meanings[0];
+                correctAnswer = wordEntry.Meanings[0];
             else
-                correctAnswer = _words[currentWordNumber].Meanings[meaningIndex];
-            var answer = new Answer(_words[currentWordNumber].Word, correctAnswer, guess);
+                correctAnswer = wordEntry.Meanings[meaningIndex];
+            var answer = new Answer(wordEntry.Word, correctAnswer, guess);
             _answers.Add(answer);
             return answer;
         }
