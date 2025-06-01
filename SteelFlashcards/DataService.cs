@@ -25,10 +25,10 @@ namespace LanguageLearn2
 
     public class DataService : IDataService
     {
-        List<WordEntry> _words;
-        int currentWordNumber;
-        int wordCount;
-        DictionaryEntry m_dictionary;
+        List<WordEntry> _words = [];
+        int currentWordNumber; // most likely should not be here
+        int wordCount; // not needed
+        DictionaryEntry m_dictionary; // not needed
 
         IList<Answer> _answers;
 
@@ -37,15 +37,20 @@ namespace LanguageLearn2
 
         public DataService()
         {
-            ReadDictJson();
             ReadDictionaries();
-            // TODO: edge case if no dictionaries exist, copy template
-            // For simplicity sake, the first dictionary is the selected dictionary for now
-            if (m_dictionaryFiles.Count > 0)
+            if (m_dictionaryFiles.Count == 0)
             {
-                m_loadedDictionary = m_dictionaryFiles[0];
-                m_loadedDictionary.IsLoaded = true;
+                CopyTemplateDictionary();
+                ReadDictionaries();
             }
+            // TODO: For simplicity, the first dictionary is the selected dictionary for now
+            if (m_dictionaryFiles.Count == 0)
+            {
+                throw new ApplicationException("Template dictionary could not be copied");
+            }
+            m_loadedDictionary = m_dictionaryFiles[0];
+            m_loadedDictionary.IsLoaded = true;
+            _words = m_loadedDictionary.Content.WordEntries;
 
             wordCount = _words.Count;
             currentWordNumber = -1;
@@ -54,21 +59,23 @@ namespace LanguageLearn2
 
         public void Save()
         {
-            m_dictionary.WordEntries = _words;
-            string jsonString = JsonSerializer.Serialize(m_dictionary);
-            string fileName = "dict.json";
-            string fullPath = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "Assets", fileName);
-            File.WriteAllText(fullPath, jsonString);
+            if (m_loadedDictionary == null)
+                throw new ApplicationException("Loaded dictionary is null in Save method");
+            Save(m_loadedDictionary);
         }
 
-        // TODO: Remove
-        private void ReadDictJson()
+        private static void Save(DictionaryFile dictionaryFile)
         {
-            string fileName = "dict.json";
-            string fullPath = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "Assets", fileName);
-            string jsonString = File.ReadAllText(fullPath);
-            m_dictionary = JsonSerializer.Deserialize<DictionaryEntry>(jsonString);
-            _words = m_dictionary.WordEntries;
+            string jsonString = JsonSerializer.Serialize(dictionaryFile.Content);
+            File.WriteAllText(dictionaryFile.FileName, jsonString);
+        }
+
+        private void CopyTemplateDictionary()
+        {
+            string fileName = "template_dict.json";
+            string fullPath = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)!, "Assets", fileName);
+            string destinationPath = Path.Combine(GetDictionariesDirectory(), "default_dict.json");
+            File.Copy(fullPath, destinationPath);
         }
 
         public WordEntry GetNextWord()
@@ -133,8 +140,7 @@ namespace LanguageLearn2
         {
             dictionary.DictionaryName = newName;
             dictionary.Content.Name = newName;
-            string serializedDictionary = JsonSerializer.Serialize(dictionary.Content);
-            File.WriteAllText(dictionary.FileName, serializedDictionary);
+            Save(dictionary);
         }
 
         public void DeleteDictionary(DictionaryFile dictionary)
@@ -162,6 +168,7 @@ namespace LanguageLearn2
                 m_loadedDictionary.IsLoaded = false;
             m_loadedDictionary = dictionary;
             m_loadedDictionary.IsLoaded = true;
+            _words = m_loadedDictionary.Content.WordEntries;
         }
 
         public DictionaryFile? GetLoadedDictionary()

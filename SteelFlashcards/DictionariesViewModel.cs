@@ -19,6 +19,9 @@ namespace LanguageLearn2
         private string? renameDictionaryName;
 
         [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(RenameDictionaryCommand))]
+        [NotifyCanExecuteChangedFor(nameof(DeleteDictionaryCommand))]
+        [NotifyCanExecuteChangedFor(nameof(LoadDictionaryCommand))]
         private DictionaryFile? selectedDictionary;
 
         [ObservableProperty]

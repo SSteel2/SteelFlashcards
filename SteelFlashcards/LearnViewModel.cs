@@ -17,6 +17,10 @@ namespace LanguageLearn2
         [ObservableProperty]
         private string? currentWord;
 
+        private IList<WordEntry> m_words;
+
+        private int m_wordIndex;
+
         private readonly ObservableCollection<Answer> answers = [];
 
         public ObservableCollection<Answer> Answers { get { return answers; } }
@@ -25,7 +29,9 @@ namespace LanguageLearn2
         {
             _dataService = dataService;
             _navigationService = navigationService;
-            CurrentWord = _dataService.GetNextWord().Word;
+            m_words = _dataService.GetWords();
+            m_wordIndex = 0;
+            SetNextWord();
         }
 
         [RelayCommand]
@@ -33,7 +39,7 @@ namespace LanguageLearn2
         {
             var answer = _dataService.AddAnswer(guess);
             answers.Add(answer);
-            CurrentWord = _dataService.GetNextWord().Word;
+            SetNextWord();
         }
 
         [RelayCommand]
@@ -42,6 +48,19 @@ namespace LanguageLearn2
             _dataService.ClearAnswers();
             answers.Clear();
             Answer.Reset();
+        }
+
+        private void SetNextWord()
+        {
+            // TODO: jei nera zodziu tai cia isvis nereiktu patekti
+            if (m_words.Count == 0)
+            {
+                CurrentWord = "[No Words in Dictionary]";
+                return;
+            }
+            CurrentWord = m_words[m_wordIndex++].Word;
+            if (m_wordIndex >= m_words.Count)
+                m_wordIndex = 0;
         }
 
     }
