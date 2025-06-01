@@ -48,11 +48,12 @@ namespace LanguageLearn2
         {
             if (e.Key == Windows.System.VirtualKey.Enter && ViewModel.CanExecuteAcceptWordEntry())
             {
-                ViewModel.AcceptWordEntry();
+                WordEntry changedWordEntry = ViewModel.AcceptWordEntryInternal();
                 NewWord.Text = string.Empty;
                 NewMeaning.Text = string.Empty;
                 NewTags.Text = string.Empty;
                 NewWord.Focus(FocusState.Programmatic);
+                WordsListView.ScrollIntoView(changedWordEntry);
             }
         }
     }

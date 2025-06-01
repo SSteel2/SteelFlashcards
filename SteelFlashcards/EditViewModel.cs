@@ -44,28 +44,37 @@ namespace LanguageLearn2
         }
 
         [RelayCommand(CanExecute = nameof(CanExecuteAcceptWordEntry))]
-        public void AcceptWordEntry()
+        private void AcceptWordEntry()
         {
+            AcceptWordEntryInternal();
+        }
+
+        public WordEntry AcceptWordEntryInternal()
+        {
+            WordEntry changedWordEntry;
             if (m_currentEditWord == null)
             {
                 var wordEntry = new WordEntry(NewWordText, [.. NewMeaningText.Split("; ")], [.. NewTagsText.Split("; ")]);
                 _dataService.AddWordEntry(wordEntry);
                 _wordEntries.Add(wordEntry);
+                changedWordEntry = wordEntry;
             }
             else
             {
                 m_currentEditWord.Word = NewWordText;
                 m_currentEditWord.Meanings = [.. NewMeaningText.Split("; ").Where(x => !string.IsNullOrWhiteSpace(x))];
                 m_currentEditWord.Tags = [.. NewTagsText.Split("; ").Where(x => !string.IsNullOrWhiteSpace(x))];
-                
+
                 // This is stupid, I know, but I didn't find a better way of notifying the collection
                 int index = _wordEntries.IndexOf(m_currentEditWord);
                 _wordEntries.RemoveAt(index);
                 _wordEntries.Insert(index, m_currentEditWord);
+                changedWordEntry = m_currentEditWord;
             }
 
             ClearEditFields();
             IsDirty = true;
+            return changedWordEntry;
         }
 
         public bool CanExecuteAcceptWordEntry()

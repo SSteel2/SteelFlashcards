@@ -19,7 +19,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <ListView ItemsSource="{x:Bind ViewModel.WordEntries}" Grid.Row="0" ScrollViewer.VerticalScrollMode="Enabled">
+        <ListView x:Name="WordsListView" ItemsSource="{x:Bind ViewModel.WordEntries}" Grid.Row="0" ScrollViewer.VerticalScrollMode="Enabled">
             <ListView.HeaderTemplate>
                 <DataTemplate>
                     <Grid Padding="16,0,100,0">
