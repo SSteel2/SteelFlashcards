@@ -16,10 +16,10 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <ListView ItemsSource="{x:Bind ViewModel.WordEntries}" Grid.Row="0" >
+        <ListView ItemsSource="{x:Bind ViewModel.WordEntries}" Grid.Row="0" ScrollViewer.VerticalScrollMode="Enabled">
             <ListView.HeaderTemplate>
                 <DataTemplate>
                     <Grid Padding="16,0,100,0">
@@ -87,7 +87,7 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <Border BorderThickness="0,2,0,0" Grid.Row="1" Margin="0,20,0,0" Padding="0,8,0,0" BorderBrush="{ThemeResource AccentFillColorDefaultBrush}">
+        <Border BorderThickness="0,2,0,0" Grid.Row="1" Margin="0,0,0,0" Padding="0,8,0,0" BorderBrush="{ThemeResource AccentFillColorDefaultBrush}">
             <Grid Padding="16,0,12,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -114,7 +114,7 @@
                 <Button Grid.Column="4" Grid.Row="1" Command="{x:Bind ViewModel.RejectWordEntryCommand}">
                     <SymbolIcon Symbol="Cancel"/>
                 </Button>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="5" Margin="0,8">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="5" Margin="0,8,0,12">
                     <TextBlock Text="There are unsaved changes" VerticalAlignment="Center" Visibility="{x:Bind ViewModel.IsDirty, Converter={StaticResource BoolToVis}, Mode=OneWay}"/>
                     <Button Background="{StaticResource AccentAAFillColorDefaultBrush}" Content="Save" Margin="4,0,0,0" Command="{x:Bind ViewModel.SaveCommand}"/>
                 </StackPanel>
