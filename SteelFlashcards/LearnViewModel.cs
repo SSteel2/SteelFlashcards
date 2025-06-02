@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.UI.Xaml.Data;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -19,9 +20,9 @@ namespace LanguageLearn2
 
         private WordEntry? m_currentWordEntry;
 
-        private IList<WordEntry> m_words;
+        private readonly IList<WordEntry> m_words;
 
-        private Random m_randomGenerator;
+        private readonly Random m_randomGenerator;
 
         private readonly ObservableCollection<Answer> answers = [];
 
@@ -69,5 +70,18 @@ namespace LanguageLearn2
             CurrentWord = m_currentWordEntry.Word;
         }
 
+    }
+
+    public class BoolToIconConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            return (bool)value ? "\u2714" : "\u274C";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
