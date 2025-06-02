@@ -8,7 +8,6 @@ namespace LanguageLearn2
     public interface IDataService
     {
         IList<WordEntry> GetWords();
-        WordEntry GetNextWord();
         void AddWordEntry(WordEntry wordEntry);
         void RemoveWordEntry(WordEntry wordEntry);
         IList<Answer> GetAnswers();
@@ -26,8 +25,6 @@ namespace LanguageLearn2
     public class DataService : IDataService
     {
         List<WordEntry> _words = [];
-        int currentWordNumber; // most likely should not be here
-        int wordCount; // not needed
 
         IList<Answer> _answers;
 
@@ -51,8 +48,6 @@ namespace LanguageLearn2
             m_loadedDictionary.IsLoaded = true;
             _words = m_loadedDictionary.Content.WordEntries;
 
-            wordCount = _words.Count;
-            currentWordNumber = -1;
             _answers = new List<Answer>();
         }
 
@@ -77,17 +72,13 @@ namespace LanguageLearn2
             File.Copy(fullPath, destinationPath);
         }
 
-        public WordEntry GetNextWord()
-        {
-            currentWordNumber = (currentWordNumber + 1) % wordCount;
-            return _words[currentWordNumber];
-        }
-
         public IList<Answer> GetAnswers()
         {
             return _answers;
         }
 
+        // TODO: move into learn view model
+        // TODO: accept answers without paranthesis explanations
         public Answer AddAnswer(string guess, WordEntry wordEntry)
         {
             int meaningIndex = wordEntry.Meanings.IndexOf(guess);

@@ -49,6 +49,7 @@ namespace LanguageLearn2
             AcceptWordEntryInternal();
         }
 
+        // looks a little bit silly when I call the public function "internal"
         public WordEntry AcceptWordEntryInternal()
         {
             WordEntry changedWordEntry;

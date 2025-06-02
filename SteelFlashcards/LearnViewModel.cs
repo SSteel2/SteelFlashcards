@@ -21,7 +21,7 @@ namespace LanguageLearn2
 
         private IList<WordEntry> m_words;
 
-        private int m_wordIndex;
+        private Random m_randomGenerator;
 
         private readonly ObservableCollection<Answer> answers = [];
 
@@ -32,7 +32,7 @@ namespace LanguageLearn2
             _dataService = dataService;
             _navigationService = navigationService;
             m_words = _dataService.GetWords();
-            m_wordIndex = 0;
+            m_randomGenerator = new Random();
             SetNextWord();
         }
 
@@ -64,10 +64,9 @@ namespace LanguageLearn2
                 CurrentWord = "[No Words in Dictionary]";
                 return;
             }
-            m_currentWordEntry = m_words[m_wordIndex++];
+            int nextIndex = m_randomGenerator.Next(0, m_words.Count);
+            m_currentWordEntry = m_words[nextIndex];
             CurrentWord = m_currentWordEntry.Word;
-            if (m_wordIndex >= m_words.Count)
-                m_wordIndex = 0;
         }
 
     }

@@ -22,7 +22,7 @@
         <TextBlock Name="WordBlock" Text="{x:Bind ViewModel.CurrentWord, Mode=OneWay}" Grid.Row="0" Grid.Column="0" FontSize="60" VerticalAlignment="Center" HorizontalAlignment="Center"/>
         <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">
             <TextBox Name="GuessBox" PlaceholderText="meaning" FontSize="40" MinWidth="600" KeyUp="GuessBox_KeyUp"/>
-            <Button Command="{x:Bind ViewModel.AcceptAnswerCommand}" CommandParameter="{x:Bind GuessBox.Text, Mode=OneWay}" VerticalAlignment="Stretch" Margin="8,0,0,0" Width="66">
+            <Button Command="{x:Bind ViewModel.AcceptAnswerCommand}" CommandParameter="{x:Bind GuessBox.Text, Mode=OneWay}" VerticalAlignment="Stretch" Margin="8,0,0,0" Width="66" Click="AcceptButton_Click">
                 <SymbolIcon Symbol="Forward"/>
                 <Button.KeyboardAccelerators>
                     <KeyboardAccelerator Key="Enter"/>
@@ -32,7 +32,7 @@
         <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" Margin="20">
             <Button Content="Reset" Command="{x:Bind ViewModel.NewAnswersCommand}" Name="NewButton"/>
         </StackPanel>
-        <ListView Grid.Row="0" Grid.Column="1" Grid.RowSpan="3" Background="LightGray" ItemsSource="{x:Bind ViewModel.Answers}">
+        <ListView x:Name="AnswersListView" Grid.Row="0" Grid.Column="1" Grid.RowSpan="3" Background="LightGray" ItemsSource="{x:Bind ViewModel.Answers}">
             <ListView.HeaderTemplate>
                 <DataTemplate>
                     <Grid Margin="16,12,12,8">

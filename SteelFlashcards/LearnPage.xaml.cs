@@ -40,7 +40,13 @@ namespace LanguageLearn2
             {
                 ViewModel.AcceptAnswer(((TextBox)sender).Text);
                 ((TextBox)sender).Text = string.Empty;
+                AnswersListView.ScrollIntoView(AnswersListView.Items[AnswersListView.Items.Count - 1]);
             }
+        }
+
+        private void AcceptButton_Click(object sender, RoutedEventArgs e)
+        {
+            AnswersListView.ScrollIntoView(AnswersListView.Items[AnswersListView.Items.Count - 1]);
         }
     }
 }
