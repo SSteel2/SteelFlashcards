@@ -4,9 +4,6 @@ using Microsoft.UI.Xaml.Data;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LanguageLearn2
 {
@@ -44,8 +41,9 @@ namespace LanguageLearn2
             if (m_currentWordEntry == null)
                 return;
 
-            var answer = _dataService.AddAnswer(guess, m_currentWordEntry);
+            Answer answer = CreateAnswer(guess);
             answers.Add(answer);
+            _dataService.AddAnswer(answer);
             SetNextWord();
         }
 
@@ -68,6 +66,59 @@ namespace LanguageLearn2
             int nextIndex = m_randomGenerator.Next(0, m_words.Count);
             m_currentWordEntry = m_words[nextIndex];
             CurrentWord = m_currentWordEntry.Word;
+        }
+
+        private Answer CreateAnswer(string guess)
+        {
+            if (m_currentWordEntry == null)
+                throw new ApplicationException("Current word entry is null in CreateAnswer");
+
+            string sanitizedGuess = guess.Trim();
+            int minDistance = int.MaxValue;
+            string bestFittingMeaning = string.Empty;
+            foreach (string meaning in m_currentWordEntry.Meanings)
+            {
+                string sanitizedMeaning = SanitizeMeaning(meaning);
+                int levensteinDistance = LevenshteinDistance(sanitizedGuess, sanitizedMeaning);
+                if (levensteinDistance < minDistance)
+                {
+                    minDistance = levensteinDistance;
+                    bestFittingMeaning = meaning;
+                }
+            }
+            
+            return new Answer(m_currentWordEntry.Word, bestFittingMeaning, guess, minDistance <= 1);
+        }
+
+        private static string SanitizeMeaning(string meaning)
+        {
+            string trimmedMeaning = meaning;
+            int openParanthesisIndex = meaning.IndexOf('(');
+            if (openParanthesisIndex > -1)
+            {
+                trimmedMeaning = meaning[..openParanthesisIndex];
+            }
+            return trimmedMeaning.Trim().ToLower();
+        }
+
+        private static int LevenshteinDistance(string word1, string word2)
+        {
+            int[,] distance = new int[word1.Length + 1, word2.Length + 1];
+            for (int i = 0; i <= word1.Length; i++)
+                distance[i, 0] = i;
+            for (int i = 1; i <= word2.Length; i++)
+                distance[0, i] = i;
+            
+            for (int i = 1; i <= word1.Length; i++)
+            {
+                for (int j = 1; j <= word2.Length; j++)
+                {
+                    // Common mistypes like 1 -> a_nosine, or a -> a_nosine could be detected in here as well
+                    int substitutionCost = word1[i - 1] == word2[j - 1] ? 0 : 1;
+                    distance[i, j] = Math.Min(distance[i - 1, j] + 1, Math.Min(distance[i, j - 1] + 1, distance[i - 1, j - 1] + substitutionCost));
+                }
+            }
+            return distance[word1.Length, word2.Length];
         }
 
     }

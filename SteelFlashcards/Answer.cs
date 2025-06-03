@@ -18,13 +18,16 @@ namespace LanguageLearn2
 
         private static int s_lastOrder = 0;
 
-        public Answer(string word, string correctAnswer, string guess)
+        public Answer(string word, string correctAnswer, string guess) 
+            : this(word, correctAnswer, guess, correctAnswer == guess) { }
+
+        public Answer(string word, string correctAnswer, string guess, bool isCorrect)
         {
             Order = ++s_lastOrder;
             Word = word;
             CorrectAnswer = correctAnswer;
             Guess = guess;
-            IsCorrect = CorrectAnswer == Guess;
+            IsCorrect = isCorrect;
         }
 
         public static void Reset()

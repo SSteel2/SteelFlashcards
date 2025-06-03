@@ -11,7 +11,7 @@ namespace LanguageLearn2
         void AddWordEntry(WordEntry wordEntry);
         void RemoveWordEntry(WordEntry wordEntry);
         IList<Answer> GetAnswers();
-        Answer AddAnswer(string guess, WordEntry wordEntry);
+        void AddAnswer(Answer answer);
         void ClearAnswers();
         void Save();
         DictionaryFile? NewDictionary(string newName);
@@ -77,19 +77,9 @@ namespace LanguageLearn2
             return _answers;
         }
 
-        // TODO: move into learn view model
-        // TODO: accept answers without paranthesis explanations
-        public Answer AddAnswer(string guess, WordEntry wordEntry)
+        public void AddAnswer(Answer answer)
         {
-            int meaningIndex = wordEntry.Meanings.IndexOf(guess);
-            string correctAnswer;
-            if (meaningIndex == -1)
-                correctAnswer = wordEntry.Meanings[0];
-            else
-                correctAnswer = wordEntry.Meanings[meaningIndex];
-            var answer = new Answer(wordEntry.Word, correctAnswer, guess);
             _answers.Add(answer);
-            return answer;
         }
 
         public void ClearAnswers()
