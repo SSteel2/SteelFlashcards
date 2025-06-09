@@ -59,6 +59,7 @@ namespace LanguageLearn2
         {
             m_navigationService = new NavigationService();
             m_navigationService.Configure(nameof(LearnPage), typeof(LearnPage));
+            m_navigationService.Configure(nameof(LearnSelectionPage), typeof(LearnSelectionPage));
             m_navigationService.Configure(nameof(DictionariesPage), typeof(DictionariesPage));
             m_navigationService.Configure(nameof(EditPage), typeof(EditPage));
 
@@ -66,6 +67,7 @@ namespace LanguageLearn2
             services.AddSingleton<INavigationService>(m_navigationService);
             services.AddSingleton<IDataService, DataService>();
             services.AddTransient<LearnViewModel>();
+            services.AddTransient<LearnSelectionViewModel>();
             services.AddTransient<DictionariesViewModel>();
             services.AddTransient<EditViewModel>();
             return services.BuildServiceProvider();

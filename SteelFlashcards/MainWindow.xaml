@@ -13,7 +13,7 @@
         <NavigationView PaneDisplayMode="Auto" PaneTitle="Steel Language Flashcards" Header="Learn" IsBackButtonVisible="Collapsed"
                         SelectionChanged="NavigationView_SelectionChanged" x:Name="NavigationViewBar" IsSettingsVisible="False">
             <NavigationView.MenuItems>
-                <NavigationViewItem Icon="Play" Content="Learn" Tag="LearnPage" IsSelected="True"/>
+                <NavigationViewItem Icon="Play" Content="Learn" Tag="LearnSelectionPage" IsSelected="True"/>
                 <NavigationViewItem Icon="Library" Content="Dictionaries" Tag="DictionariesPage"/>
                 <NavigationViewItem Icon="Edit" Content="Word Entries" Tag="EditPage"/>
             </NavigationView.MenuItems>
