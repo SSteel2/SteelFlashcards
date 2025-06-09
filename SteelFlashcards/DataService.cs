@@ -8,6 +8,8 @@ namespace LanguageLearn2
     public interface IDataService
     {
         IList<WordEntry> GetWords();
+        IList<DictionaryTag> GetActiveTags();
+        void SetActiveTags(IList<DictionaryTag> tags);
         void AddWordEntry(WordEntry wordEntry);
         void RemoveWordEntry(WordEntry wordEntry);
         IList<Answer> GetAnswers();
@@ -27,6 +29,7 @@ namespace LanguageLearn2
         List<WordEntry> _words = [];
 
         IList<Answer> _answers;
+        List<DictionaryTag> m_activeTags = [];
 
         List<DictionaryFile> m_dictionaryFiles = [];
         DictionaryFile? m_loadedDictionary = null;
@@ -58,20 +61,6 @@ namespace LanguageLearn2
             Save(m_loadedDictionary);
         }
 
-        private static void Save(DictionaryFile dictionaryFile)
-        {
-            string jsonString = JsonSerializer.Serialize(dictionaryFile.Content);
-            File.WriteAllText(dictionaryFile.FileName, jsonString);
-        }
-
-        private void CopyTemplateDictionary()
-        {
-            string fileName = "template_dict.json";
-            string fullPath = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)!, "Assets", fileName);
-            string destinationPath = Path.Combine(GetDictionariesDirectory(), "default_dict.json");
-            File.Copy(fullPath, destinationPath);
-        }
-
         public IList<Answer> GetAnswers()
         {
             return _answers;
@@ -90,6 +79,17 @@ namespace LanguageLearn2
         public IList<WordEntry> GetWords()
         {
             return _words;
+        }
+
+        public IList<DictionaryTag> GetActiveTags()
+        {
+            return m_activeTags;
+        }
+
+        public void SetActiveTags(IList<DictionaryTag> tags)
+        {
+            m_activeTags.Clear();
+            m_activeTags.AddRange(tags);
         }
 
         public void AddWordEntry(WordEntry wordEntry)
@@ -188,6 +188,19 @@ namespace LanguageLearn2
                 DictionaryName = dictionaryEntry.Name,
                 FileName = fileName
             };
+        }
+        private static void Save(DictionaryFile dictionaryFile)
+        {
+            string jsonString = JsonSerializer.Serialize(dictionaryFile.Content);
+            File.WriteAllText(dictionaryFile.FileName, jsonString);
+        }
+
+        private void CopyTemplateDictionary()
+        {
+            string fileName = "template_dict.json";
+            string fullPath = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)!, "Assets", fileName);
+            string destinationPath = Path.Combine(GetDictionariesDirectory(), "default_dict.json");
+            File.Copy(fullPath, destinationPath);
         }
 
         private static string GetDictionariesDirectory()

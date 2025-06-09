@@ -14,46 +14,36 @@ namespace LanguageLearn2
         private IDataService _dataService;
         private INavigationService _navigationService;
 
-        private readonly ObservableCollection<Tag> _tags;
-        public ObservableCollection<Tag> Tags { get { return _tags; } }
+        private readonly ObservableCollection<DictionaryTag> _tags;
+        public ObservableCollection<DictionaryTag> Tags { get { return _tags; } }
+
+        public List<DictionaryTag> SelectedTags { get; } = [];
 
         public LearnSelectionViewModel(IDataService dataService, INavigationService navigationService)
         {
             _dataService = dataService;
             _navigationService = navigationService;
             _tags = [];
-            InitializeDummyData();
+            InitializeTags();
         }
 
         [RelayCommand]
         private void AcceptNavigate()
         {
+            _dataService.SetActiveTags(SelectedTags);
             _navigationService.NavigateTo(nameof(LearnPage));
         }
 
-        private void InitializeDummyData()
+        private void InitializeTags()
         {
-            Tags.Add(new Tag("Tag 1", 10));
-            Tags.Add(new Tag("Tag 15", 15));
-            Tags.Add(new Tag("Happpppppppppppppppppppppppy long tag", 1));
-            Tags.Add(new Tag("Happpppppppppppppppppppppppy long tag", 1));
-            Tags.Add(new Tag("Happpppppppppppppppppppppppy long tag", 1));
-            Tags.Add(new Tag("fdsafdas long tag", 1));
-            Tags.Add(new Tag("Happpppppppppppppppppppppppy long tag", 1));
-            Tags.Add(new Tag("Happpppppppfadsfsadppppppppppppppppy long tag", 1));
-            Tags.Add(new Tag("Happpppppppppppppppppppppppy long tag", 1));
-            Tags.Add(new Tag("fasfasfa long tag", 1));
-            Tags.Add(new Tag("Happpppppppppppppppppppppppy long tag", 1));
-            Tags.Add(new Tag("trewtarsdfg long tag", 1));
-            Tags.Add(new Tag("Happpppppppppppppppppppppppy long tag", 1));
-            Tags.Add(new Tag("yolo", 1520));
+            DictionaryFile? loadedDictionary = _dataService.GetLoadedDictionary();
+            if (loadedDictionary == null)
+                return; // TODO: Add some proper UI, which indicates that no dictionary is loaded
+            var tags = loadedDictionary.GetTags();
+            foreach (var tag in tags)
+            {
+                Tags.Add(tag);
+            }
         }
-
-    }
-
-    public class Tag(string tagName, int wordCount)
-    {
-        public string TagName { get; set; } = tagName;
-        public int WordCount { get; set; } = wordCount;
     }
 }

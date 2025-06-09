@@ -15,10 +15,10 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <TextBlock Grid.Row="0" Text="Select Word Set" FontSize="18" FontWeight="Bold" Margin="0,12"/>
-        <ItemsView Grid.Row="1" ItemsSource="{x:Bind ViewModel.Tags}" HorizontalAlignment="Stretch">
+        <ItemsView x:Name="TagsView" Grid.Row="1" ItemsSource="{x:Bind ViewModel.Tags}" HorizontalAlignment="Stretch" SelectionMode="Extended" SelectionChanged="ItemsView_SelectionChanged">
             <ItemsView.ItemTemplate>
-                <DataTemplate x:DataType="local:Tag">
-                    <ItemContainer>
+                <DataTemplate x:DataType="local:DictionaryTag">
+                    <ItemContainer SizeChanged="ItemContainer_SizeChanged">
                         <Border BorderThickness="1" BorderBrush="Black" CornerRadius="12" Padding="8,2">
                             <StackPanel Orientation="Horizontal" Spacing="4" Width="Auto">
                                 <TextBlock Text="{x:Bind TagName}"/>
@@ -34,11 +34,14 @@
                 <LinedFlowLayout LineSpacing="8" MinItemSpacing="8" ItemsStretch="None" ItemsJustification="Start"/>
             </ItemsView.Layout>
         </ItemsView>
-        <Button Grid.Row="2" HorizontalAlignment="Center" Command="{x:Bind ViewModel.AcceptNavigateCommand}" Margin="20" Style="{StaticResource AccentButtonStyle}">
-            <StackPanel Orientation="Horizontal">
-                <FontIcon Glyph="&#xE768;" FontSize="24"/>
-                <TextBlock Text="Start" Margin="4,0,0,0" FontSize="24"/>
-            </StackPanel>
-        </Button>
+        <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center" Margin="20" Spacing="4">
+            <Button Content="Select All" FontSize="24" Click="SelectAll_Click"/>
+            <Button Command="{x:Bind ViewModel.AcceptNavigateCommand}" Style="{StaticResource AccentButtonStyle}">
+                <StackPanel Orientation="Horizontal">
+                    <FontIcon Glyph="&#xE768;" FontSize="24"/>
+                    <TextBlock Text="Start" Margin="4,0,0,0" FontSize="24"/>
+                </StackPanel>
+            </Button>
+        </StackPanel>
     </Grid>
 </Page>

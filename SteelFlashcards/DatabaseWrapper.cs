@@ -92,6 +92,26 @@ namespace LanguageLearn2
             }
         }
 
+        // Calculated on the fly, not stored in memory (TODO: yet)
+        public List<DictionaryTag> GetTags()
+        {
+            Dictionary<string, int> tags = [];
+            foreach (var wordEntry in Content.WordEntries)
+            {
+                foreach (string tag in wordEntry.Tags)
+                {
+                    if (tags.TryGetValue(tag, out int value))
+                        tags[tag] = ++value;
+                    else
+                        tags[tag] = 1;
+                }
+            }
+            List<DictionaryTag> tagList = [];
+            foreach (KeyValuePair<string, int> tag in tags)
+                tagList.Add(new DictionaryTag(tag.Key, tag.Value));
+            return tagList;
+        }
+
         public int GetTagCount()
         {
             var tagSet = new HashSet<string>();
@@ -100,5 +120,11 @@ namespace LanguageLearn2
                     tagSet.Add(tag);
             return tagSet.Count;
         }
+    }
+
+    public class DictionaryTag(string tagName, int wordCount)
+    {
+        public string TagName { get; set; } = tagName;
+        public int WordCount { get; set; } = wordCount;
     }
 }

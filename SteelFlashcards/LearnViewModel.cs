@@ -4,6 +4,7 @@ using Microsoft.UI.Xaml.Data;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace LanguageLearn2
 {
@@ -17,7 +18,7 @@ namespace LanguageLearn2
 
         private WordEntry? m_currentWordEntry;
 
-        private readonly IList<WordEntry> m_words;
+        private readonly List<WordEntry> m_words = [];
 
         private readonly Random m_randomGenerator;
 
@@ -32,7 +33,8 @@ namespace LanguageLearn2
         {
             _dataService = dataService;
             _navigationService = navigationService;
-            m_words = _dataService.GetWords();
+            //m_words = _dataService.GetWords();
+            InitializeWords();
             m_randomGenerator = new Random();
             LastAnswer = null;
             SetNextWord();
@@ -59,6 +61,15 @@ namespace LanguageLearn2
             answers.Clear();
             Answer.Reset();
             LastAnswer = null;
+        }
+
+        private void InitializeWords()
+        {
+            IList<WordEntry> dictionaryWords = _dataService.GetWords();
+            IList<DictionaryTag> activeTags = _dataService.GetActiveTags();
+            foreach (WordEntry wordEntry in dictionaryWords)
+                if (wordEntry.Tags.Intersect(activeTags.Select(x => x.TagName)).Any())
+                    m_words.Add(wordEntry);
         }
 
         private void SetNextWord()
