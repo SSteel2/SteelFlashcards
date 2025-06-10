@@ -1,6 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using Windows.Storage;
+using Windows.Storage.Pickers;
 
 namespace LanguageLearn2
 {
@@ -21,6 +26,7 @@ namespace LanguageLearn2
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(RenameDictionaryCommand))]
         [NotifyCanExecuteChangedFor(nameof(DeleteDictionaryCommand))]
+        [NotifyCanExecuteChangedFor(nameof(ExportDictionaryCommand))]
         [NotifyCanExecuteChangedFor(nameof(LoadDictionaryCommand))]
         private DictionaryFile? selectedDictionary;
 
@@ -67,6 +73,26 @@ namespace LanguageLearn2
             _dataService.DeleteDictionary(SelectedDictionary);
             m_dictionaryFiles.Remove(SelectedDictionary);
             LoadedDictionary = _dataService.GetLoadedDictionary();
+        }
+
+        [RelayCommand(CanExecute = nameof(IsDictionarySelected))]
+        public async Task ExportDictionary()
+        {
+            if (SelectedDictionary == null)
+                return;
+            FileSavePicker savePicker = new();
+            var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(App.MainWindow);
+            WinRT.Interop.InitializeWithWindow.Initialize(savePicker, hWnd);
+            savePicker.FileTypeChoices.Add("JSON Dictionary", new List<string> { ".json" });
+            // TODO: check what happens with illeagal characters
+            savePicker.SuggestedFileName = SelectedDictionary.Content.Name;
+            StorageFile file = await savePicker.PickSaveFileAsync();
+            if (file == null)
+            {
+                return;
+                // operation cancelled
+            }
+            await _dataService.ExportDictionaryAsync(SelectedDictionary, file);
         }
 
         [RelayCommand(CanExecute = nameof(IsDictionarySelected))]

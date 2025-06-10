@@ -36,7 +36,6 @@
                 <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="Auto" MinWidth="83"/>
             </Grid.ColumnDefinitions>
-            <!--pratesti cia-->
             <TextBlock Text="Previous Word" Grid.Row="0" Grid.Column="0" VerticalAlignment="Bottom"/>
             <TextBlock Text="{x:Bind ViewModel.LastAnswer.Word, Mode=OneWay}" Grid.Row="1" Grid.RowSpan="3" Grid.Column="0" FontSize="40"/>
             <TextBlock Text="Your Answer" Grid.Row="0" Grid.Column="1" VerticalAlignment="Bottom"/>
@@ -45,6 +44,7 @@
             <TextBlock Text="{x:Bind ViewModel.LastAnswer.CorrectAnswer, Mode=OneWay}" Grid.Row="3" Grid.Column="1" FontSize="24"/>
             <TextBlock Text="{x:Bind ViewModel.LastAnswer.IsCorrect, Mode=OneWay, Converter={StaticResource BoolToIcon}}" Grid.Row="0" Grid.Column="2" Grid.RowSpan="4" FontSize="60" VerticalAlignment="Center"/>
         </Grid>
+        <!--TODO: Focus on answer box on navigation to this page-->
         <TextBlock Name="WordBlock" Text="{x:Bind ViewModel.CurrentWord, Mode=OneWay}" Grid.Row="1" Grid.Column="0" FontSize="80" VerticalAlignment="Center" HorizontalAlignment="Center"/>
         <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">
             <TextBox Name="GuessBox" PlaceholderText="meaning" FontSize="40" MinWidth="600" KeyUp="GuessBox_KeyUp"/>

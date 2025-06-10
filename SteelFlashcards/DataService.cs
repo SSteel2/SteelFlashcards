@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
+using System.Threading.Tasks;
+using Windows.Storage;
 
 namespace LanguageLearn2
 {
@@ -19,6 +21,7 @@ namespace LanguageLearn2
         DictionaryFile? NewDictionary(string newName);
         void RenameDictionary(DictionaryFile dictionary, string newName);
         void DeleteDictionary(DictionaryFile dictionary);
+        Task ExportDictionaryAsync(DictionaryFile dictionary, StorageFile storageFile);
         void LoadDictionary(DictionaryFile dictionary);
         IList<DictionaryFile> GetDictionaries();
         DictionaryFile? GetLoadedDictionary();
@@ -140,6 +143,14 @@ namespace LanguageLearn2
                     m_loadedDictionary = null;
                 }
             }
+        }
+
+        public async Task ExportDictionaryAsync(DictionaryFile dictionary, StorageFile storageFile)
+        {
+            CachedFileManager.DeferUpdates(storageFile);
+            string jsonString = JsonSerializer.Serialize(dictionary.Content);
+            await FileIO.WriteTextAsync(storageFile, jsonString);
+            await CachedFileManager.CompleteUpdatesAsync(storageFile);
         }
 
         public void LoadDictionary(DictionaryFile dictionary)

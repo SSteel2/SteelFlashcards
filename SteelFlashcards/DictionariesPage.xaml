@@ -18,7 +18,6 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <!--TODO: Remake this into GridView maybe-->
         <ListView Margin="12" ItemsSource="{x:Bind ViewModel.DictionaryFiles, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedDictionary, Mode=TwoWay}">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="local:DictionaryFile">
@@ -96,7 +95,7 @@
                 </Button.Flyout>
             </Button>
             <Button Content="Delete" Command="{x:Bind ViewModel.DeleteDictionaryCommand}"/>
-            <Button Content="Export"/>
+            <Button Content="Export" Command="{x:Bind ViewModel.ExportDictionaryCommand}"/>
             <Button Content="Import"/>
             <Button Content="Load" Command="{x:Bind ViewModel.LoadDictionaryCommand}"/>
         </StackPanel>
