@@ -22,6 +22,7 @@ namespace LanguageLearn2
         void RenameDictionary(DictionaryFile dictionary, string newName);
         void DeleteDictionary(DictionaryFile dictionary);
         Task ExportDictionaryAsync(DictionaryFile dictionary, StorageFile storageFile);
+        Task<DictionaryFile?> ImportDictionaryAsync(StorageFile storageFile);
         void LoadDictionary(DictionaryFile dictionary);
         IList<DictionaryFile> GetDictionaries();
         DictionaryFile? GetLoadedDictionary();
@@ -151,6 +152,22 @@ namespace LanguageLearn2
             string jsonString = JsonSerializer.Serialize(dictionary.Content);
             await FileIO.WriteTextAsync(storageFile, jsonString);
             await CachedFileManager.CompleteUpdatesAsync(storageFile);
+        }
+
+        public async Task<DictionaryFile?> ImportDictionaryAsync(StorageFile storageFile)
+        {
+            string jsonString = await FileIO.ReadTextAsync(storageFile);
+            DictionaryEntry? dictionaryEntry = JsonSerializer.Deserialize<DictionaryEntry>(jsonString);
+            if (dictionaryEntry == null)
+                return null;
+
+            StorageFolder storageFolder = await StorageFolder.GetFolderFromPathAsync(GetDictionariesDirectory());
+            StorageFile newDictionary = await storageFile.CopyAsync(storageFolder, storageFile.Name, NameCollisionOption.GenerateUniqueName);
+
+            var dictionaryFile = ReadDictionary(newDictionary.Path);
+            if (dictionaryFile != null)
+                m_dictionaryFiles.Add(dictionaryFile);
+            return dictionaryFile;
         }
 
         public void LoadDictionary(DictionaryFile dictionary)

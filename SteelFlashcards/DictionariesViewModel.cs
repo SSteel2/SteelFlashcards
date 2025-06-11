@@ -95,6 +95,25 @@ namespace LanguageLearn2
             await _dataService.ExportDictionaryAsync(SelectedDictionary, file);
         }
 
+        [RelayCommand]
+        public async Task ImportDictionary()
+        {
+            FileOpenPicker openPicker = new();
+            var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(App.MainWindow);
+            WinRT.Interop.InitializeWithWindow.Initialize(openPicker, hWnd);
+            openPicker.FileTypeFilter.Add(".json");
+            openPicker.ViewMode = PickerViewMode.List;
+            StorageFile file = await openPicker.PickSingleFileAsync();
+            if (file == null)
+            {
+                return;
+            }
+            // TODO: Add some proper notification about invalid file
+            DictionaryFile? dictionaryFile = await _dataService.ImportDictionaryAsync(file);
+            if (dictionaryFile != null)
+                m_dictionaryFiles.Add(dictionaryFile);
+        }
+
         [RelayCommand(CanExecute = nameof(IsDictionarySelected))]
         public void LoadDictionary()
         {

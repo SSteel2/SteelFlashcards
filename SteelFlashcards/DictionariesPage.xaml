@@ -26,6 +26,8 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="80"/>
                             <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="80"/>
+                            <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
@@ -34,14 +36,15 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <!--TODO: make it possible to rename in this view-->
-                        <!--TODO: figure out a proper text size-->
-                        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" Text="{x:Bind DictionaryName, Mode=OneWay}" FontSize="20" Margin="0,0,0,4"/>
-                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Words:" HorizontalAlignment="Right" VerticalAlignment="Center"/>
-                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind WordCount, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0"/>
-                        <TextBlock Grid.Row="1" Grid.Column="2" Text="Tags:" HorizontalAlignment="Right" VerticalAlignment="Center"/>
-                        <TextBlock Grid.Row="1" Grid.Column="3" Text="{x:Bind TagCount, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0"/>
+                        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="6" Text="{x:Bind DictionaryName, Mode=OneWay}" FontSize="20" Margin="0,0,0,4" FontWeight="SemiBold"/>
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Words:" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="14"/>
+                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind WordCount, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="12,0" FontSize="14"/>
+                        <TextBlock Grid.Row="1" Grid.Column="2" Text="Tags:" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="14"/>
+                        <TextBlock Grid.Row="1" Grid.Column="3" Text="{x:Bind TagCount, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="12,0" FontSize="14"/>
+                        <TextBlock Grid.Row="1" Grid.Column="4" Text="File Name:" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="14"/>
+                        <TextBlock Grid.Row="1" Grid.Column="5" Text="{x:Bind FileName, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="12,0" Foreground="Gray" FontSize="14"/>
                         <!--Last column for selected tag-->
-                        <Border Grid.Column="4" Grid.RowSpan="2" BorderThickness="1" BorderBrush="Black" Width="Auto" CornerRadius="12" VerticalAlignment="Center" Visibility="{x:Bind IsLoaded, Mode=TwoWay, Converter={StaticResource BoolToVis}}">
+                        <Border Grid.Column="6" Grid.RowSpan="2" BorderThickness="1" BorderBrush="Black" Width="Auto" CornerRadius="12" VerticalAlignment="Center" Visibility="{x:Bind IsLoaded, Mode=TwoWay, Converter={StaticResource BoolToVis}}">
                             <TextBlock Text="Loaded" Width="Auto" Padding="8,2" HorizontalAlignment="Center"/>
                         </Border>
                     </Grid>
@@ -96,7 +99,7 @@
             </Button>
             <Button Content="Delete" Command="{x:Bind ViewModel.DeleteDictionaryCommand}"/>
             <Button Content="Export" Command="{x:Bind ViewModel.ExportDictionaryCommand}"/>
-            <Button Content="Import"/>
+            <Button Content="Import" Command="{x:Bind ViewModel.ImportDictionaryCommand}"/>
             <Button Content="Load" Command="{x:Bind ViewModel.LoadDictionaryCommand}"/>
         </StackPanel>
     </Grid>
