@@ -16,6 +16,11 @@
                 <NavigationViewItem Icon="Play" Content="Learn" Tag="LearnSelectionPage" IsSelected="True"/>
                 <NavigationViewItem Icon="Library" Content="Dictionaries" Tag="DictionariesPage"/>
                 <NavigationViewItem Icon="Edit" Content="Word Entries" Tag="EditPage"/>
+                <NavigationViewItem Content="Statistics" Tag="StatisticsPage">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE9D2;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
             </NavigationView.MenuItems>
             <Frame x:Name="RootFrame" NavigationFailed="RootFrame_NavigationFailed"/>
         </NavigationView>

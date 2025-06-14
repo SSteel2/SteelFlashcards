@@ -16,6 +16,7 @@
     <None Remove="DictionariesPage.xaml" />
     <None Remove="EditPage.xaml" />
     <None Remove="LearnSelectionPage.xaml" />
+    <None Remove="StatisticsPage.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -48,6 +49,11 @@
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.3916" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.250401001" />
     <PackageReference Include="System.Text.Json" Version="9.0.5" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="StatisticsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="LearnSelectionPage.xaml">

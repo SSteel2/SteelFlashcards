@@ -32,7 +32,7 @@ namespace LanguageLearn2
         /// Invoked when the application is launched.
         /// </summary>
         /// <param name="args">Details about the launch request and process.</param>
-        protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
+        protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
             ServiceProvider = RegisterServices();
             if (m_navigationService == null)
@@ -48,6 +48,7 @@ namespace LanguageLearn2
             m_navigationService.Configure(nameof(LearnSelectionPage), typeof(LearnSelectionPage));
             m_navigationService.Configure(nameof(DictionariesPage), typeof(DictionariesPage));
             m_navigationService.Configure(nameof(EditPage), typeof(EditPage));
+            m_navigationService.Configure(nameof(StatisticsPage), typeof(StatisticsPage));
 
             var services = new ServiceCollection();
             services.AddSingleton<INavigationService>(m_navigationService);
@@ -56,6 +57,7 @@ namespace LanguageLearn2
             services.AddTransient<LearnSelectionViewModel>();
             services.AddTransient<DictionariesViewModel>();
             services.AddTransient<EditViewModel>();
+            services.AddTransient<StatisticsViewModel>();
             return services.BuildServiceProvider();
         }
     }
