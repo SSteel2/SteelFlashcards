@@ -57,10 +57,15 @@ namespace LanguageLearn2
         [RelayCommand]
         public void NewAnswers()
         {
-            _dataService.ClearAnswers();
+            _dataService.FlushAnswers();
             answers.Clear();
             Answer.Reset();
             LastAnswer = null;
+        }
+
+        public void SaveAnswers()
+        {
+            _dataService.FlushAnswers();
         }
 
         private void InitializeWords()

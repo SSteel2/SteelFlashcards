@@ -39,5 +39,10 @@ namespace LanguageLearn2
             if (AnswersListView.Items.Count > 0)
                 AnswersListView.ScrollIntoView(AnswersListView.Items[^1]);
         }
+
+        private void Page_Unloaded(object sender, RoutedEventArgs e)
+        {
+            ViewModel.SaveAnswers();
+        }
     }
 }

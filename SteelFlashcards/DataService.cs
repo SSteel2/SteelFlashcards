@@ -14,9 +14,9 @@ namespace LanguageLearn2
         void SetActiveTags(IList<DictionaryTag> tags);
         void AddWordEntry(WordEntry wordEntry);
         void RemoveWordEntry(WordEntry wordEntry);
-        IList<Answer> GetAnswers();
+        IList<JsonAnswer> GetAnswers();
         void AddAnswer(Answer answer);
-        void ClearAnswers();
+        void FlushAnswers();
         void Save();
         DictionaryFile? NewDictionary(string newName);
         void RenameDictionary(DictionaryFile dictionary, string newName);
@@ -32,7 +32,9 @@ namespace LanguageLearn2
     {
         List<WordEntry> _words = [];
 
-        IList<Answer> _answers;
+        List<JsonAnswer> _answers;
+        List<JsonAnswer> _answersBuffer;
+        bool m_isAnswersLoaded;
         List<DictionaryTag> m_activeTags = [];
 
         List<DictionaryFile> m_dictionaryFiles = [];
@@ -55,7 +57,9 @@ namespace LanguageLearn2
             m_loadedDictionary.IsLoaded = true;
             _words = m_loadedDictionary.Content.WordEntries;
 
-            _answers = new List<Answer>();
+            _answers = [];
+            _answersBuffer = [];
+            m_isAnswersLoaded = false;
         }
 
         public void Save()
@@ -65,19 +69,45 @@ namespace LanguageLearn2
             Save(m_loadedDictionary);
         }
 
-        public IList<Answer> GetAnswers()
+        public IList<JsonAnswer> GetAnswers()
         {
+            // Redo
             return _answers;
         }
 
         public void AddAnswer(Answer answer)
         {
-            _answers.Add(answer);
+            _answersBuffer.Add(answer);
         }
 
-        public void ClearAnswers()
+        public async void FlushAnswers()
         {
-            _answers = new List<Answer>();
+            // Should never happen
+            if (m_loadedDictionary == null)
+                return;
+
+            // TODO: seriously needs to be more robust
+            StorageFolder storageFolder = await StorageFolder.GetFolderFromPathAsync(GetAnswersFolderPath());
+            // Answers file matches dictionary file name in answers directory
+            string fileName = Path.GetFileNameWithoutExtension(m_loadedDictionary.FileName);
+            fileName += "_answers.json";
+            StorageFile? answersFile = await storageFolder.TryGetItemAsync(fileName) as StorageFile;
+            // File didn't exist
+            if (answersFile == null)
+            {
+                answersFile = await storageFolder.CreateFileAsync(fileName);
+                m_isAnswersLoaded = true;
+            }
+            if (!m_isAnswersLoaded)
+            {
+                string answersContent = await FileIO.ReadTextAsync(answersFile);
+                _answers = JsonSerializer.Deserialize<List<JsonAnswer>>(answersContent) ?? throw new ArgumentException("Answers content is malformed");
+                m_isAnswersLoaded = true;
+            }
+            _answers.AddRange(_answersBuffer);
+            string updatedAnswersContent = JsonSerializer.Serialize(_answers);
+            await FileIO.WriteTextAsync(answersFile, updatedAnswersContent);
+            _answersBuffer.Clear();
         }
 
         public IList<WordEntry> GetWords()
@@ -108,7 +138,7 @@ namespace LanguageLearn2
 
         public DictionaryFile? NewDictionary(string newName)
         {
-            string applicationUserDictionariesFolder = GetDictionariesDirectory();
+            string applicationUserDictionariesFolder = GetDictionariesFolderPath();
             var dictionary = new DictionaryEntry(newName, []);
             string serializedDictionary = JsonSerializer.Serialize(dictionary);
             string dictionaryFullPath = Path.Combine(applicationUserDictionariesFolder, SanitizeFileName(newName) + ".json");
@@ -161,7 +191,7 @@ namespace LanguageLearn2
             if (dictionaryEntry == null)
                 return null;
 
-            StorageFolder storageFolder = await StorageFolder.GetFolderFromPathAsync(GetDictionariesDirectory());
+            StorageFolder storageFolder = await StorageFolder.GetFolderFromPathAsync(GetDictionariesFolderPath());
             StorageFile newDictionary = await storageFile.CopyAsync(storageFolder, storageFile.Name, NameCollisionOption.GenerateUniqueName);
 
             var dictionaryFile = ReadDictionary(newDictionary.Path);
@@ -191,7 +221,7 @@ namespace LanguageLearn2
 
         private void ReadDictionaries()
         {
-            string applicationUserDictionariesFolder = GetDictionariesDirectory();
+            string applicationUserDictionariesFolder = GetDictionariesFolderPath();
             string[] allFiles = Directory.GetFiles(applicationUserDictionariesFolder);
             foreach (string file in allFiles)
             {
@@ -227,21 +257,38 @@ namespace LanguageLearn2
         {
             string fileName = "template_dict.json";
             string fullPath = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)!, "Assets", fileName);
-            string destinationPath = Path.Combine(GetDictionariesDirectory(), "default_dict.json");
+            string destinationPath = Path.Combine(GetDictionariesFolderPath(), "default_dict.json");
             File.Copy(fullPath, destinationPath);
         }
 
-        private static string GetDictionariesDirectory()
+        private static string GetDictionariesFolderPath()
+        {
+            // TODO: remake string into enum (maybe)
+            return GetApplicationUserFolderPath("Dictionaries");
+        }
+
+        private static string GetAnswersFolderPath()
+        {
+            return GetApplicationUserFolderPath("Answers");
+        }
+
+        private static string GetApplicationUserFolderPath(string subDirectoryName)
+        {
+            string applicationUserFolder = GetApplicationUserFolderPath();
+            string applicationUserDictionariesFolder = Path.Combine(applicationUserFolder, subDirectoryName);
+            if (!Directory.Exists(@applicationUserDictionariesFolder))
+                Directory.CreateDirectory(@applicationUserDictionariesFolder);
+            return applicationUserDictionariesFolder;
+        }
+
+        private static string GetApplicationUserFolderPath()
         {
             // TODO: exception handling is seriously missing in here
             string documentsFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             string applicationUserFolder = Path.Combine(documentsFolderPath, "Steel Flashcards");
             if (!Directory.Exists(applicationUserFolder))
                 Directory.CreateDirectory(applicationUserFolder);
-            string applicationUserDictionariesFolder = Path.Combine(applicationUserFolder, "Dictionaries");
-            if (!Directory.Exists(@applicationUserDictionariesFolder))
-                Directory.CreateDirectory(@applicationUserDictionariesFolder);
-            return applicationUserDictionariesFolder;
+            return applicationUserFolder;
         }
 
         private static string SanitizeFileName(string fileName)
