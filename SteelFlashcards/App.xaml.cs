@@ -49,6 +49,7 @@ namespace LanguageLearn2
             m_navigationService.Configure(nameof(DictionariesPage), typeof(DictionariesPage));
             m_navigationService.Configure(nameof(EditPage), typeof(EditPage));
             m_navigationService.Configure(nameof(StatisticsPage), typeof(StatisticsPage));
+            m_navigationService.Configure(nameof(StatisticsTagPage), typeof(StatisticsTagPage));
 
             var services = new ServiceCollection();
             services.AddSingleton<INavigationService>(m_navigationService);
@@ -58,6 +59,7 @@ namespace LanguageLearn2
             services.AddTransient<DictionariesViewModel>();
             services.AddTransient<EditViewModel>();
             services.AddTransient<StatisticsViewModel>();
+            services.AddTransient<StatisticsTagViewModel>();
             return services.BuildServiceProvider();
         }
     }

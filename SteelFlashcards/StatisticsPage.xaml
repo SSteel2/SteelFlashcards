@@ -28,16 +28,6 @@
             <GridView.ItemTemplate>
                 <DataTemplate x:DataType="local:TagStatistic">
                     <Border CornerRadius="4" Padding="8" BorderBrush="Black" BorderThickness="1">
-                        <!--<Grid MinWidth="200" MinHeight="120">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Border BorderThickness="1" BorderBrush="Black" CornerRadius="12">
-                                <TextBlock Text="{x:Bind tagName}" Padding="8,2" HorizontalAlignment="Center"/>
-                            </Border>
-                            <TextBlock Text="{x:Bind GetWordsMasteryString()}" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Grid>-->
                         <RelativePanel MinWidth="180">
                             <Border x:Name="TagBorder" BorderThickness="1" BorderBrush="Black" CornerRadius="12"
                                     RelativePanel.AlignHorizontalCenterWithPanel="True">
@@ -52,5 +42,8 @@
                 </DataTemplate>
             </GridView.ItemTemplate>
         </GridView>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Padding="12">
+            <Button Content="View" />
+        </StackPanel>
     </StackPanel>
 </Page>
