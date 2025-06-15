@@ -8,7 +8,49 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid>
-        <TextBlock Text="Yay stats page"/>
-    </Grid>
+    <StackPanel Orientation="Vertical">
+        <Grid> <!--Global stats-->
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="{x:Bind ViewModel.LoadedDictionaryName}" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" FontSize="20" Margin="0,20,0,0"/>
+            <TextBlock Text="Mastered:" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Right" Margin="0,12,0,0"/>
+            <TextBlock Text="{x:Bind ViewModel.MasteredTagsString}" Grid.Column="1" Grid.Row="1" Margin="8,12,0,0"/>
+            <TextBlock Text="{x:Bind ViewModel.MasteredWordsString}" Grid.Column="1" Grid.Row="2" Margin="8,4,0,0"/>
+        </Grid>
+        <GridView ItemsSource="{x:Bind ViewModel.TagStatistics}" Margin="0,12,0,0">
+            <GridView.ItemTemplate>
+                <DataTemplate x:DataType="local:TagStatistic">
+                    <Border CornerRadius="4" Padding="8" BorderBrush="Black" BorderThickness="1">
+                        <!--<Grid MinWidth="200" MinHeight="120">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Border BorderThickness="1" BorderBrush="Black" CornerRadius="12">
+                                <TextBlock Text="{x:Bind tagName}" Padding="8,2" HorizontalAlignment="Center"/>
+                            </Border>
+                            <TextBlock Text="{x:Bind GetWordsMasteryString()}" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Grid>-->
+                        <RelativePanel MinWidth="180">
+                            <Border x:Name="TagBorder" BorderThickness="1" BorderBrush="Black" CornerRadius="12"
+                                    RelativePanel.AlignHorizontalCenterWithPanel="True">
+                                <TextBlock Text="{x:Bind tagName}" Padding="8,2" HorizontalAlignment="Center"/>
+                            </Border>
+                            <TextBlock Text="{x:Bind GetWordsMasteryString()}" Grid.Row="1" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" Margin="0,8,0,0"
+                                       RelativePanel.Below="TagBorder"
+                                       RelativePanel.AlignHorizontalCenterWithPanel="True"/>
+                        </RelativePanel>
+                    </Border>
+                </DataTemplate>
+            </GridView.ItemTemplate>
+        </GridView>
+    </StackPanel>
 </Page>
