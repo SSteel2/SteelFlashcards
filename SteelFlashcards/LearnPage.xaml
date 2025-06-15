@@ -79,7 +79,7 @@
                 </DataTemplate>
             </ListView.HeaderTemplate>
             <ListView.ItemTemplate>
-                <DataTemplate x:DataType="local:Answer">
+                <DataTemplate x:DataType="local:LearnPageAnswer">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="24"/>

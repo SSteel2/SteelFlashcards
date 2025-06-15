@@ -14,9 +14,9 @@ namespace LanguageLearn2
         void SetActiveTags(IList<DictionaryTag> tags);
         void AddWordEntry(WordEntry wordEntry);
         void RemoveWordEntry(WordEntry wordEntry);
-        IList<JsonAnswer> GetAnswers();
-        void AddAnswer(Answer answer);
-        void FlushAnswers();
+        IList<Answer> GetAnswers();
+        void AddAnswer(LearnPageAnswer answer);
+        Task FlushAnswers();
         void Save();
         DictionaryFile? NewDictionary(string newName);
         void RenameDictionary(DictionaryFile dictionary, string newName);
@@ -32,8 +32,8 @@ namespace LanguageLearn2
     {
         List<WordEntry> _words = [];
 
-        List<JsonAnswer> _answers;
-        List<JsonAnswer> _answersBuffer;
+        List<Answer> _answers;
+        List<Answer> _answersBuffer;
         bool m_isAnswersLoaded;
         List<DictionaryTag> m_activeTags = [];
 
@@ -69,19 +69,22 @@ namespace LanguageLearn2
             Save(m_loadedDictionary);
         }
 
-        public IList<JsonAnswer> GetAnswers()
+        public IList<Answer> GetAnswers()
         {
             // Redo
             return _answers;
         }
 
-        public void AddAnswer(Answer answer)
+        public void AddAnswer(LearnPageAnswer answer)
         {
             _answersBuffer.Add(answer);
         }
 
-        public async void FlushAnswers()
+        public async Task FlushAnswers()
         {
+            // Nothing to save
+            if (_answersBuffer.Count == 0)
+                return;
             // Should never happen
             if (m_loadedDictionary == null)
                 return;
@@ -101,7 +104,7 @@ namespace LanguageLearn2
             if (!m_isAnswersLoaded)
             {
                 string answersContent = await FileIO.ReadTextAsync(answersFile);
-                _answers = JsonSerializer.Deserialize<List<JsonAnswer>>(answersContent) ?? throw new ArgumentException("Answers content is malformed");
+                _answers = JsonSerializer.Deserialize<List<Answer>>(answersContent) ?? throw new ArgumentException("Answers content is malformed");
                 m_isAnswersLoaded = true;
             }
             _answers.AddRange(_answersBuffer);

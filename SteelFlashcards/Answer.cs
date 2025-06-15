@@ -1,27 +1,29 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
 
 namespace LanguageLearn2
 {
-    public class JsonAnswer
+    public class Answer
     {
         public string Word { get; set; }
         public string Guess { get; set; }
         public bool IsCorrect { get; set; }
+        public DateTimeOffset AttemptDateTime { get; set; }
     }
 
-    public class Answer : JsonAnswer
+    public class LearnPageAnswer : Answer
     {
         public int Order { get; set; }
         public string CorrectAnswer { get; set; }
 
         private static int s_lastOrder = 0;
 
-        public Answer(string word, string correctAnswer, string guess) 
+        public LearnPageAnswer(string word, string correctAnswer, string guess) 
             : this(word, correctAnswer, guess, correctAnswer == guess) { }
 
-        public Answer(string word, string correctAnswer, string guess, bool isCorrect)
+        public LearnPageAnswer(string word, string correctAnswer, string guess, bool isCorrect)
         {
             Order = ++s_lastOrder;
+            AttemptDateTime = DateTimeOffset.Now;
             Word = word;
             CorrectAnswer = correctAnswer;
             Guess = guess;

@@ -25,7 +25,7 @@ namespace LanguageLearn2
         /// </summary>
         public App()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         /// <summary>

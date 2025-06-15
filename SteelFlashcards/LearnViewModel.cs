@@ -1,5 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.UI;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml.Data;
 using System;
 using System.Collections.Generic;
@@ -22,12 +24,15 @@ namespace LanguageLearn2
 
         private readonly Random m_randomGenerator;
 
-        private readonly ObservableCollection<Answer> answers = [];
+        private readonly AppWindow m_appWindow;
+        private bool m_isApplicationClosing;
 
-        public ObservableCollection<Answer> Answers { get { return answers; } }
+        private readonly ObservableCollection<LearnPageAnswer> answers = [];
+
+        public ObservableCollection<LearnPageAnswer> Answers { get { return answers; } }
 
         [ObservableProperty]
-        private Answer? lastAnswer;
+        private LearnPageAnswer? lastAnswer;
 
         public LearnViewModel(IDataService dataService, INavigationService navigationService)
         {
@@ -38,6 +43,19 @@ namespace LanguageLearn2
             m_randomGenerator = new Random();
             LastAnswer = null;
             SetNextWord();
+
+            var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(App.MainWindow);
+            var myWndId = Win32Interop.GetWindowIdFromWindow(hWnd);
+            m_appWindow = AppWindow.GetFromWindowId(myWndId);
+            m_appWindow.Closing += ApplicationWindow_Closing;
+        }
+
+        private async void ApplicationWindow_Closing(AppWindow sender, AppWindowClosingEventArgs args)
+        {
+            args.Cancel = true;
+            await _dataService.FlushAnswers();
+            m_isApplicationClosing = true;
+            App.MainWindow?.Close();
         }
 
         [RelayCommand]
@@ -47,7 +65,7 @@ namespace LanguageLearn2
             if (m_currentWordEntry == null)
                 return;
 
-            Answer answer = CreateAnswer(guess);
+            LearnPageAnswer answer = CreateAnswer(guess);
             answers.Add(answer);
             _dataService.AddAnswer(answer);
             LastAnswer = answer;
@@ -59,13 +77,14 @@ namespace LanguageLearn2
         {
             _dataService.FlushAnswers();
             answers.Clear();
-            Answer.Reset();
+            LearnPageAnswer.Reset();
             LastAnswer = null;
         }
 
         public void SaveAnswers()
         {
-            _dataService.FlushAnswers();
+            if (!m_isApplicationClosing)
+                _dataService.FlushAnswers();
         }
 
         private void InitializeWords()
@@ -90,7 +109,7 @@ namespace LanguageLearn2
             CurrentWord = m_currentWordEntry.Word;
         }
 
-        private Answer CreateAnswer(string guess)
+        private LearnPageAnswer CreateAnswer(string guess)
         {
             if (m_currentWordEntry == null)
                 throw new ApplicationException("Current word entry is null in CreateAnswer");
@@ -109,7 +128,7 @@ namespace LanguageLearn2
                 }
             }
             
-            return new Answer(m_currentWordEntry.Word, bestFittingMeaning, guess, minDistance <= 1);
+            return new LearnPageAnswer(m_currentWordEntry.Word, bestFittingMeaning, guess, minDistance <= 1);
         }
 
         private static string SanitizeMeaning(string meaning)
