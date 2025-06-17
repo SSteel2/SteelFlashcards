@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
 using System;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -20,6 +21,12 @@ namespace LanguageLearn2
             if (ViewModel == null)
                 throw new ApplicationException("Dev: Missing StatisticsViewModel Service");
             InitializeComponent();
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            ViewModel.InitializeTagStatistic(e.Parameter as string);
+            base.OnNavigatedTo(e);
         }
     }
 }

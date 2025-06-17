@@ -24,7 +24,7 @@
             <TextBlock Text="{x:Bind ViewModel.MasteredTagsString}" Grid.Column="1" Grid.Row="1" Margin="8,12,0,0"/>
             <TextBlock Text="{x:Bind ViewModel.MasteredWordsString}" Grid.Column="1" Grid.Row="2" Margin="8,4,0,0"/>
         </Grid>
-        <GridView ItemsSource="{x:Bind ViewModel.TagStatistics}" Margin="0,12,0,0">
+        <GridView ItemsSource="{x:Bind ViewModel.TagStatistics}" Margin="0,12,0,0" SelectedItem="{x:Bind ViewModel.SelectedTag, Mode=TwoWay}">
             <GridView.ItemTemplate>
                 <DataTemplate x:DataType="local:TagStatistic">
                     <Border CornerRadius="4" Padding="8" BorderBrush="Black" BorderThickness="1">
@@ -43,7 +43,7 @@
             </GridView.ItemTemplate>
         </GridView>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Padding="12">
-            <Button Content="View" />
+            <Button Content="View" Command="{x:Bind ViewModel.ViewTagCommand}" Background="{ThemeResource AccentFillColorDefaultBrush}"/>
         </StackPanel>
     </StackPanel>
 </Page>

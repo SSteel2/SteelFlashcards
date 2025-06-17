@@ -1,4 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -133,7 +135,7 @@ namespace LanguageLearn2
         private IDataService _dataService;
         private INavigationService _navigationService;
 
-        private Statistics m_statistics = new();
+        private Statistics m_statistics;
 
         [ObservableProperty]
         private string loadedDictionaryName;
@@ -143,12 +145,15 @@ namespace LanguageLearn2
         private string masteredWordsString;
         [ObservableProperty]
         private ObservableCollection<TagStatistic> tagStatistics = [];
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(ViewTagCommand))]
+        private TagStatistic? selectedTag;
 
         public StatisticsViewModel(IDataService dataService, INavigationService navigationService)
         {
             _dataService = dataService;
             _navigationService = navigationService;
-            InitializeDummyData();
+            m_statistics = _dataService.GetStatistics();
             var loadedDictionary = _dataService.GetLoadedDictionary();
             LoadedDictionaryName = loadedDictionary == null ? "[No Dcitionary Loaded]" : loadedDictionary.DictionaryName;
             MasteredTagsString = m_statistics.GetTagsMasteryString();
@@ -159,40 +164,17 @@ namespace LanguageLearn2
             }
         }
 
-        private void InitializeDummyData()
+        [RelayCommand(CanExecute = nameof(IsTagSelected))]
+        private void ViewTag()
         {
-            //m_statistics = new Statistics();
-            m_statistics.AddWord(new WordEntry("a", ["a"], ["aaa"]));
-            m_statistics.AddWord(new WordEntry("aa", ["a"], ["aaa"]));
-            m_statistics.AddWord(new WordEntry("b", ["b"], ["bbb"]));
-            m_statistics.AddWord(new WordEntry("bb", ["b"], ["bbb"]));
-            m_statistics.AddWord(new WordEntry("ab", ["ab"], ["bbb", "aaa"]));
-            m_statistics.AddWord(new WordEntry("c", ["c"], ["ccc"]));
-            m_statistics.AddWord(new WordEntry("cc", ["c"], ["ccc"]));
-            m_statistics.AddWord(new WordEntry("ccc", ["c"], ["ccc"]));
-            m_statistics.AddAnswer(new Answer { Word = "a", Guess = "a", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
-            m_statistics.AddAnswer(new Answer { Word = "a", Guess = "a", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
-            m_statistics.AddAnswer(new Answer { Word = "a", Guess = "a", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
-            m_statistics.AddAnswer(new Answer { Word = "aa", Guess = "a", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
-            m_statistics.AddAnswer(new Answer { Word = "aa", Guess = "a", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
-            m_statistics.AddAnswer(new Answer { Word = "aa", Guess = "a", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
-            m_statistics.AddAnswer(new Answer { Word = "b", Guess = "b", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
-            m_statistics.AddAnswer(new Answer { Word = "b", Guess = "b", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
-            m_statistics.AddAnswer(new Answer { Word = "b", Guess = "b", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
-            m_statistics.AddAnswer(new Answer { Word = "bb", Guess = "b", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
-            m_statistics.AddAnswer(new Answer { Word = "bb", Guess = "b", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
-            m_statistics.AddAnswer(new Answer { Word = "ab", Guess = "ab", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
-            m_statistics.AddAnswer(new Answer { Word = "ab", Guess = "abb", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
-            m_statistics.AddAnswer(new Answer { Word = "ab", Guess = "abb", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
-            m_statistics.AddAnswer(new Answer { Word = "c", Guess = "d", IsCorrect = false, AttemptDateTime = System.DateTimeOffset.Now });
-            m_statistics.AddAnswer(new Answer { Word = "c", Guess = "c", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
-            m_statistics.AddAnswer(new Answer { Word = "c", Guess = "c", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
-            m_statistics.AddAnswer(new Answer { Word = "cc", Guess = "c", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
-            m_statistics.AddAnswer(new Answer { Word = "cc", Guess = "c", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
-            m_statistics.AddAnswer(new Answer { Word = "cc", Guess = "c", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
-            m_statistics.AddAnswer(new Answer { Word = "cc", Guess = "d", IsCorrect = false, AttemptDateTime = System.DateTimeOffset.Now });
-            m_statistics.AddAnswer(new Answer { Word = "cc", Guess = "d", IsCorrect = false, AttemptDateTime = System.DateTimeOffset.Now });
-            m_statistics.CalculateMastery();
+            if (SelectedTag == null)
+                throw new ApplicationException("Dev Error: SelectedTag is null in ViewTag");
+            _navigationService.NavigateTo(nameof(StatisticsTagPage), SelectedTag.tagName);
+        }
+
+        private bool IsTagSelected()
+        {
+            return SelectedTag != null;
         }
     }
 }

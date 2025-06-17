@@ -26,6 +26,10 @@ namespace LanguageLearn2
         void LoadDictionary(DictionaryFile dictionary);
         IList<DictionaryFile> GetDictionaries();
         DictionaryFile? GetLoadedDictionary();
+
+        // temp (until I decide on a proper way where to store data)
+        Statistics GetStatistics();
+        TagStatistic? GetTagStatistic(string tagName);
     }
 
     public class DataService : IDataService
@@ -39,6 +43,8 @@ namespace LanguageLearn2
 
         List<DictionaryFile> m_dictionaryFiles = [];
         DictionaryFile? m_loadedDictionary = null;
+
+        Statistics m_statistics = new();
 
         public DataService()
         {
@@ -60,6 +66,8 @@ namespace LanguageLearn2
             _answers = [];
             _answersBuffer = [];
             m_isAnswersLoaded = false;
+
+            InitializeDummyStatistics();
         }
 
         public void Save()
@@ -222,6 +230,18 @@ namespace LanguageLearn2
             return m_dictionaryFiles;
         }
 
+        public Statistics GetStatistics()
+        {
+            return m_statistics;
+        }
+
+        public TagStatistic? GetTagStatistic(string tagName)
+        {
+            if (!m_statistics.tags.ContainsKey(tagName))
+                return null; // TODO: should not happen, needs proper error handling?
+            return m_statistics.tags[tagName];
+        }
+
         private void ReadDictionaries()
         {
             string applicationUserDictionariesFolder = GetDictionariesFolderPath();
@@ -304,5 +324,39 @@ namespace LanguageLearn2
             return sanitizedFileName;
         }
 
+        private void InitializeDummyStatistics()
+        {
+            m_statistics.AddWord(new WordEntry("a", ["a"], ["aaa"]));
+            m_statistics.AddWord(new WordEntry("aa", ["a"], ["aaa"]));
+            m_statistics.AddWord(new WordEntry("b", ["b"], ["bbb"]));
+            m_statistics.AddWord(new WordEntry("bb", ["b"], ["bbb"]));
+            m_statistics.AddWord(new WordEntry("ab", ["ab"], ["bbb", "aaa"]));
+            m_statistics.AddWord(new WordEntry("c", ["c"], ["ccc"]));
+            m_statistics.AddWord(new WordEntry("cc", ["c"], ["ccc"]));
+            m_statistics.AddWord(new WordEntry("ccc", ["c"], ["ccc"]));
+            m_statistics.AddAnswer(new Answer { Word = "a", Guess = "a", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
+            m_statistics.AddAnswer(new Answer { Word = "a", Guess = "a", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
+            m_statistics.AddAnswer(new Answer { Word = "a", Guess = "a", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
+            m_statistics.AddAnswer(new Answer { Word = "aa", Guess = "a", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
+            m_statistics.AddAnswer(new Answer { Word = "aa", Guess = "a", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
+            m_statistics.AddAnswer(new Answer { Word = "aa", Guess = "a", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
+            m_statistics.AddAnswer(new Answer { Word = "b", Guess = "b", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
+            m_statistics.AddAnswer(new Answer { Word = "b", Guess = "b", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
+            m_statistics.AddAnswer(new Answer { Word = "b", Guess = "b", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
+            m_statistics.AddAnswer(new Answer { Word = "bb", Guess = "b", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
+            m_statistics.AddAnswer(new Answer { Word = "bb", Guess = "b", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
+            m_statistics.AddAnswer(new Answer { Word = "ab", Guess = "ab", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
+            m_statistics.AddAnswer(new Answer { Word = "ab", Guess = "abb", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
+            m_statistics.AddAnswer(new Answer { Word = "ab", Guess = "abb", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
+            m_statistics.AddAnswer(new Answer { Word = "c", Guess = "d", IsCorrect = false, AttemptDateTime = System.DateTimeOffset.Now });
+            m_statistics.AddAnswer(new Answer { Word = "c", Guess = "c", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
+            m_statistics.AddAnswer(new Answer { Word = "c", Guess = "c", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
+            m_statistics.AddAnswer(new Answer { Word = "cc", Guess = "c", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
+            m_statistics.AddAnswer(new Answer { Word = "cc", Guess = "c", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
+            m_statistics.AddAnswer(new Answer { Word = "cc", Guess = "c", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
+            m_statistics.AddAnswer(new Answer { Word = "cc", Guess = "d", IsCorrect = false, AttemptDateTime = System.DateTimeOffset.Now });
+            m_statistics.AddAnswer(new Answer { Word = "cc", Guess = "d", IsCorrect = false, AttemptDateTime = System.DateTimeOffset.Now });
+            m_statistics.CalculateMastery();
+        }
     }
 }
