@@ -127,8 +127,9 @@ namespace LanguageLearn2
                     bestFittingMeaning = meaning;
                 }
             }
-            
-            return new LearnPageAnswer(m_currentWordEntry.Word, bestFittingMeaning, guess, minDistance <= 1);
+
+            bool isCorrect = bestFittingMeaning.Length > 3 ? minDistance <= 1 : minDistance == 0;
+            return new LearnPageAnswer(m_currentWordEntry.Word, bestFittingMeaning, guess, isCorrect);
         }
 
         private static string SanitizeMeaning(string meaning)
