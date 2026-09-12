@@ -6,7 +6,12 @@
     xmlns:local="using:SteelFlashcards"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:converters="using:CommunityToolkit.WinUI.Converters"
     mc:Ignorable="d">
+
+    <Page.Resources>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVis" />
+    </Page.Resources>
 
     <StackPanel Orientation="Vertical">
         <StackPanel Orientation="Horizontal" Margin="12,12,0,0"> <!--Top row with tag and mastery counter-->
@@ -23,7 +28,17 @@
                 <DataTemplate x:DataType="local:WordStatistic">
                     <Expander HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
                         <Expander.Header>
-                            <TextBlock Text="{x:Bind Word}"/>
+                            <StackPanel Orientation="Horizontal" Spacing="12">
+                                <TextBlock Text="{x:Bind Word}" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                <TextBlock Text="{x:Bind LastAttempt}" VerticalAlignment="Center" Opacity="0.7"/>
+                                <TextBlock Text="{x:Bind TotalAttemptsString()}" VerticalAlignment="Center"/>
+                                <TextBlock Text="{x:Bind RecentAttemptsString()}" VerticalAlignment="Center"/>
+                                <FontIcon Glyph="&#xE735;"
+                                          FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                          Foreground="Gold"
+                                          VerticalAlignment="Center"
+                                          Visibility="{x:Bind IsMastered, Converter={StaticResource BoolToVis}}"/>
+                            </StackPanel>
                         </Expander.Header>
                         <ListView ItemsSource="{x:Bind Answers}" SelectionMode="None">
                             <ListView.ItemTemplate>

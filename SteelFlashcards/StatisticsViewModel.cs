@@ -12,26 +12,67 @@ namespace SteelFlashcards
         public string Word = word;
         public List<Answer> Answers = [];
         // TODO: proper access modifiers, once I figure out the classes
-        public bool isMastered;
+        private bool? isMastered;
+
+        private int m_correctAttempts = 0;
+        private int m_recentAttempts = 0;
+        private int m_recentCorrectAttempts = 0;
 
         public void AddAnswer(Answer answer)
         {
             Answers.Add(answer);
+            if (answer.IsCorrect)
+                m_correctAttempts++;
+            if (answer.AttemptDateTime > DateTimeOffset.Now.AddDays(-90))
+            {
+                m_recentAttempts++;
+                if (answer.IsCorrect)
+                    m_recentCorrectAttempts++;
+            }
         }
 
-        public bool CalculateMastery()
+        public bool IsMastered
+        {
+            get {
+                if (isMastered == null)
+                    CalculateMastery();
+                return isMastered.Value;
+            }
+        }
+
+        [MemberNotNull(nameof(isMastered))]
+        private void CalculateMastery()
         {
             if (Answers.Count < 3)
             {
                 isMastered = false;
-                return false;
+                return;
             }
             // TODO: check if dates are in correct order
             Answers.Sort((x, y) => x.AttemptDateTime.CompareTo(y.AttemptDateTime));
 
             // TODO: check if last answer is less than 90 days ago
             isMastered = Answers[^1].IsCorrect && Answers[^2].IsCorrect && Answers[^3].IsCorrect;
-            return isMastered;
+        }
+
+        public DateTimeOffset LastAttempt
+        { 
+            get {
+                if (Answers.Count == 0)
+                    return DateTimeOffset.MinValue;
+                Answers.Sort((x, y) => x.AttemptDateTime.CompareTo(y.AttemptDateTime));
+                return Answers[^1].AttemptDateTime;
+            }
+        }
+
+        public string TotalAttemptsString()
+        {
+            return Statistics.GetFractionString(m_correctAttempts, Answers.Count);
+        }
+
+        public string RecentAttemptsString()
+        {
+            return Statistics.GetFractionString(m_recentCorrectAttempts, m_recentAttempts);
         }
     }
 
@@ -52,7 +93,7 @@ namespace SteelFlashcards
         {
             foreach (WordStatistic word in Words)
             {
-                if (word.isMastered)
+                if (word.IsMastered)
                     wordsMastered++;
             }
             return wordsTotal == wordsMastered;
@@ -113,7 +154,7 @@ namespace SteelFlashcards
         {
             foreach (var word in words)
             {
-                if (word.Value.CalculateMastery())
+                if (word.Value.IsMastered)
                     wordsMastered++;
             }
             foreach (var tag in tags)
