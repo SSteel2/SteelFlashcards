@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using System;
 
 namespace LanguageLearn2
@@ -28,6 +29,12 @@ namespace LanguageLearn2
                 throw new ApplicationException("Dev: _dataService.GetTagStatistic(tagName) returned null in InitializeTagStatistic");
 
             //MasteredWordsString = SelectedTag.GetWordsMasteryString();
+        }
+
+        [RelayCommand]
+        private void GoBack()
+        {
+            _navigationService.GoBack();
         }
     }
 }

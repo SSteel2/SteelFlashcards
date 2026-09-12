@@ -1,9 +1,9 @@
 {
   "profiles": {
-    "LanguageLearn2 (Package)": {
+    "SteelFlashcards (Package)": {
       "commandName": "MsixPackage"
     },
-    "LanguageLearn2 (Unpackaged)": {
+    "SteelFlashcards (Unpackaged)": {
       "commandName": "Project"
     }
   }

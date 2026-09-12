@@ -15,6 +15,9 @@
             </Border>
             <TextBlock Text="{x:Bind ViewModel.SelectedTag.GetWordsMasteryString()}" Margin="20,4,0,0"/>
         </StackPanel>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Padding="12">
+            <Button Content="Back" Command="{x:Bind ViewModel.GoBackCommand}"/>
+        </StackPanel>
         <TextBlock Text="Tag stats page"/>
     </StackPanel>
 </Page>
