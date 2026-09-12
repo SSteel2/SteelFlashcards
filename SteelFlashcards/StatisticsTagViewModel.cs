@@ -3,12 +3,15 @@ using System;
 
 namespace LanguageLearn2
 {
-    public class StatisticsTagViewModel : ObservableObject
+    public partial class StatisticsTagViewModel : ObservableObject
     {
         private IDataService _dataService;
         private INavigationService _navigationService;
 
+        [ObservableProperty]
         private TagStatistic selectedTag;
+        //[ObservableProperty]
+        //private string masteredWordsString;
 
         public StatisticsTagViewModel(IDataService dataService, INavigationService navigationService)
         {
@@ -20,9 +23,11 @@ namespace LanguageLearn2
         {
             if (tagName == null)
                 throw new ApplicationException("Dev: tagName is null in InitializeTagStatistic");
-            selectedTag = _dataService.GetTagStatistic(tagName);
-            if (selectedTag == null)
+            SelectedTag = _dataService.GetTagStatistic(tagName);
+            if (SelectedTag == null)
                 throw new ApplicationException("Dev: _dataService.GetTagStatistic(tagName) returned null in InitializeTagStatistic");
+
+            //MasteredWordsString = SelectedTag.GetWordsMasteryString();
         }
     }
 }

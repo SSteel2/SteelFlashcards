@@ -3,6 +3,8 @@ using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using Windows.Graphics.Display;
 
 namespace LanguageLearn2
 {
@@ -36,6 +38,7 @@ namespace LanguageLearn2
 
     public class TagStatistic(string tagName)
     {
+        // TODO: Fix casing
         public string tagName = tagName;
         int wordsMastered = 0;
         int wordsTotal = 0;
@@ -76,6 +79,14 @@ namespace LanguageLearn2
         public void AddWord(WordEntry word)
         {
             WordStatistic wordStatistic = new WordStatistic(word.Word);
+            // TODO: What happens if word already exists. For simplicity and not caring about degenerate cases right now
+            // lets ignore duplicates
+            if (words.ContainsKey(word.Word))
+            {
+                // Maybe some warning for leter
+                return;
+            }
+            
             words.Add(word.Word, wordStatistic);
             wordsTotal++;
             foreach (var tag in word.Tags)
@@ -114,6 +125,8 @@ namespace LanguageLearn2
             }
         }
 
+        // TODO: Move next 3 methods to StatisticsViewModel
+
         public string GetTagsMasteryString()
         {
             return "Tags " + GetFractionString(tagsMastered, tagsTotal);
@@ -135,14 +148,14 @@ namespace LanguageLearn2
         private IDataService _dataService;
         private INavigationService _navigationService;
 
-        private Statistics m_statistics;
+        private Statistics m_statistics = new();
 
         [ObservableProperty]
         private string loadedDictionaryName;
         [ObservableProperty]
-        private string masteredTagsString;
+        private string masteredTagsString = "";
         [ObservableProperty]
-        private string masteredWordsString;
+        private string masteredWordsString = "";
         [ObservableProperty]
         private ObservableCollection<TagStatistic> tagStatistics = [];
         [ObservableProperty]
@@ -153,9 +166,21 @@ namespace LanguageLearn2
         {
             _dataService = dataService;
             _navigationService = navigationService;
-            m_statistics = _dataService.GetStatistics();
+            //m_statistics = await _dataService.GetStatistics();
             var loadedDictionary = _dataService.GetLoadedDictionary();
             LoadedDictionaryName = loadedDictionary == null ? "[No Dcitionary Loaded]" : loadedDictionary.DictionaryName;
+            //MasteredTagsString = m_statistics.GetTagsMasteryString();
+            //MasteredWordsString = m_statistics.GetWordsMasteryString();
+            //foreach (var tag in m_statistics.tags)
+            //{
+            //    TagStatistics.Add(tag.Value);
+            //}
+        }
+
+        [RelayCommand]
+        public void LoadStatistics()
+        {
+            m_statistics = _dataService.GetStatistics();
             MasteredTagsString = m_statistics.GetTagsMasteryString();
             MasteredWordsString = m_statistics.GetWordsMasteryString();
             foreach (var tag in m_statistics.tags)

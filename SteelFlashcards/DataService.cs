@@ -59,15 +59,16 @@ namespace LanguageLearn2
             {
                 throw new ApplicationException("Template dictionary could not be copied");
             }
-            m_loadedDictionary = m_dictionaryFiles[0];
-            m_loadedDictionary.IsLoaded = true;
-            _words = m_loadedDictionary.Content.WordEntries;
+            //m_loadedDictionary = m_dictionaryFiles[0];
+            //m_loadedDictionary.IsLoaded = true;
+            //_words = m_loadedDictionary.Content.WordEntries;
+            LoadDictionary(m_dictionaryFiles[0]);
 
             _answers = [];
             _answersBuffer = [];
             m_isAnswersLoaded = false;
 
-            InitializeDummyStatistics();
+            //InitializeDummyStatistics();
         }
 
         public void Save()
@@ -88,14 +89,12 @@ namespace LanguageLearn2
             _answersBuffer.Add(answer);
         }
 
-        public async Task FlushAnswers()
+        // TODO: Move private methods to bottom. Even better, seperate this class into seperate ones as there are too many things in here
+        private async Task<StorageFile> LoadAnswersFile()
         {
-            // Nothing to save
-            if (_answersBuffer.Count == 0)
-                return;
             // Should never happen
             if (m_loadedDictionary == null)
-                return;
+                throw new ApplicationException("Should never happen: m_loadedDictionary is null in LoadAnswersFile");
 
             // TODO: seriously needs to be more robust
             StorageFolder storageFolder = await StorageFolder.GetFolderFromPathAsync(GetAnswersFolderPath());
@@ -103,12 +102,69 @@ namespace LanguageLearn2
             string fileName = Path.GetFileNameWithoutExtension(m_loadedDictionary.FileName);
             fileName += "_answers.json";
             StorageFile? answersFile = await storageFolder.TryGetItemAsync(fileName) as StorageFile;
-            // File didn't exist
             if (answersFile == null)
             {
                 answersFile = await storageFolder.CreateFileAsync(fileName);
                 m_isAnswersLoaded = true;
             }
+            return answersFile;
+        }
+
+        // Populates m_answers from answers file
+        private async Task LoadAnswers()
+        {
+            // TODO: Ensure dictionary switch flushes answers and resets them
+            if (m_isAnswersLoaded)
+                return;
+
+            // Should never happen
+            if (m_loadedDictionary == null)
+                return;
+
+            StorageFile answersFile = await LoadAnswersFile();
+            // If a file didn't exist, answers are marked as loaded and we don't need to read the file
+            if (m_isAnswersLoaded)
+                return;
+            // TODO: Check what happens if answersFile was just created. Does it crash?
+            string answersContent = await FileIO.ReadTextAsync(answersFile);
+            _answers = JsonSerializer.Deserialize<List<Answer>>(answersContent) ?? throw new ArgumentException("Answers content is malformed");
+            m_isAnswersLoaded = true;
+        }
+
+        // Special case of having the same method twice, but I can't figure out which one is better
+        // StorageFile or basic .NET file handling. StorageFile gives me async and UI update issues and takes a long time
+        private void LoadAnswers2()
+        {
+            // TODO: Ensure dictionary switch flushes answers and resets them
+            if (m_isAnswersLoaded)
+                return;
+
+            // Should never happen
+            if (m_loadedDictionary == null)
+                return;
+
+            //GetAnswersFolderPath()
+            // Answers file matches dictionary file name in answers directory
+            string fileName = Path.GetFileNameWithoutExtension(m_loadedDictionary.FileName);
+            fileName += "_answers.json";
+            string fullName = Path.Join(GetAnswersFolderPath(), fileName);
+
+            if (File.Exists(fullName))
+            {
+                string content = File.ReadAllText(fullName);
+                _answers = JsonSerializer.Deserialize<List<Answer>>(content) ?? throw new ArgumentException("Answers content is malformed");
+            }
+
+            m_isAnswersLoaded = true;
+        }
+
+        public async Task FlushAnswers()
+        {
+            // Nothing to save
+            if (_answersBuffer.Count == 0)
+                return;
+
+            var answersFile = await LoadAnswersFile();
             if (!m_isAnswersLoaded)
             {
                 string answersContent = await FileIO.ReadTextAsync(answersFile);
@@ -218,6 +274,17 @@ namespace LanguageLearn2
             m_loadedDictionary = dictionary;
             m_loadedDictionary.IsLoaded = true;
             _words = m_loadedDictionary.Content.WordEntries;
+
+            // TODO: Loading with StorageFile is really slow, albeit most robust
+            // Probably best to load it together with app startup
+
+            // Invalidate existing statistics
+            m_statistics = new();
+
+            LoadAnswers2();
+            // TODO: multiple same words 
+            foreach (var word in m_loadedDictionary.Content.WordEntries)
+                m_statistics.AddWord(word);
         }
 
         public DictionaryFile? GetLoadedDictionary()
@@ -263,13 +330,12 @@ namespace LanguageLearn2
             if (dictionaryEntry == null)
                 return null;
             // TODO: what happens on malformed files - exception handling needed
-            return new DictionaryFile
+            return new DictionaryFile(dictionaryEntry)
             {
-                Content = dictionaryEntry,
-                DictionaryName = dictionaryEntry.Name,
                 FileName = fileName
             };
         }
+
         private static void Save(DictionaryFile dictionaryFile)
         {
             string jsonString = JsonSerializer.Serialize(dictionaryFile.Content);
@@ -285,8 +351,7 @@ namespace LanguageLearn2
         }
 
         private static string GetDictionariesFolderPath()
-        {
-            // TODO: remake string into enum (maybe)
+        {    
             return GetApplicationUserFolderPath("Dictionaries");
         }
 
@@ -295,6 +360,7 @@ namespace LanguageLearn2
             return GetApplicationUserFolderPath("Answers");
         }
 
+        // TODO: remake string into enum
         private static string GetApplicationUserFolderPath(string subDirectoryName)
         {
             string applicationUserFolder = GetApplicationUserFolderPath();

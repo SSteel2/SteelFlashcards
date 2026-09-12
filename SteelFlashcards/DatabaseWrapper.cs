@@ -44,6 +44,7 @@ namespace LanguageLearn2
             return string.Join("; ", Tags);
         }
 
+        // TODO: This could be an extension method
         public static WordEntry? FindWordEntry(IList<WordEntry> words, int id)
         {
             foreach (WordEntry word in words)
@@ -69,7 +70,7 @@ namespace LanguageLearn2
 
     public partial class DictionaryFile : ObservableObject
     {
-        public string FileName { get; set; }
+        public required string FileName { get; set; }
 
         public DictionaryEntry Content { get; set; }
 
@@ -78,6 +79,25 @@ namespace LanguageLearn2
 
         [ObservableProperty]
         private string dictionaryName;
+
+        [ObservableProperty]
+        private bool isPristine;
+
+        public DictionaryFile(DictionaryEntry content)
+        {
+            Content = content;
+            dictionaryName = content.Name;
+            IsPristine = true;
+            HashSet<string> duplicateCheck = [];
+            foreach (var entry in Content.WordEntries)
+            {
+                if (!duplicateCheck.Add(entry.Word))
+                {
+                    IsPristine = false;
+                    break;
+                }
+            }
+        }
 
         public int WordCount { get { return Content.WordEntries.Count; } }
 
