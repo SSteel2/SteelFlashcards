@@ -22,11 +22,5 @@ namespace SteelFlashcards
                 throw new ApplicationException("Dev: Missing StatisticsViewModel Service");
             InitializeComponent();
         }
-
-        protected override void OnNavigatedTo(NavigationEventArgs e)
-        {
-            ViewModel.LoadStatistics();
-            base.OnNavigatedTo(e);
-        }
     }
 }

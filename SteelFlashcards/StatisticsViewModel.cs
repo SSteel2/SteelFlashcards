@@ -166,15 +166,9 @@ namespace SteelFlashcards
         {
             _dataService = dataService;
             _navigationService = navigationService;
-            //m_statistics = await _dataService.GetStatistics();
             var loadedDictionary = _dataService.GetLoadedDictionary();
-            LoadedDictionaryName = loadedDictionary == null ? "[No Dcitionary Loaded]" : loadedDictionary.DictionaryName;
-            //MasteredTagsString = m_statistics.GetTagsMasteryString();
-            //MasteredWordsString = m_statistics.GetWordsMasteryString();
-            //foreach (var tag in m_statistics.tags)
-            //{
-            //    TagStatistics.Add(tag.Value);
-            //}
+            LoadedDictionaryName = loadedDictionary == null ? "[No Dictionary Loaded]" : loadedDictionary.DictionaryName;
+            LoadStatistics();
         }
 
         [RelayCommand]
