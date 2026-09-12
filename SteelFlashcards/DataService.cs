@@ -67,8 +67,6 @@ namespace SteelFlashcards
             _answers = [];
             _answersBuffer = [];
             m_isAnswersLoaded = false;
-
-            //InitializeDummyStatistics();
         }
 
         public void Save()
@@ -98,7 +96,7 @@ namespace SteelFlashcards
 
             // TODO: seriously needs to be more robust
             StorageFolder storageFolder = await StorageFolder.GetFolderFromPathAsync(GetAnswersFolderPath());
-            // Answers file matches dictionary file name in answers directory
+            // Answers file matches dictionary file name in Answers directory
             string fileName = Path.GetFileNameWithoutExtension(m_loadedDictionary.FileName);
             fileName += "_answers.json";
             StorageFile? answersFile = await storageFolder.TryGetItemAsync(fileName) as StorageFile;
@@ -110,10 +108,10 @@ namespace SteelFlashcards
             return answersFile;
         }
 
-        // Populates m_answers from answers file
+        // Populates m_answers from Answers file
         private async Task LoadAnswers()
         {
-            // TODO: Ensure dictionary switch flushes answers and resets them
+            // TODO: Ensure dictionary switch flushes Answers and resets them
             if (m_isAnswersLoaded)
                 return;
 
@@ -122,7 +120,7 @@ namespace SteelFlashcards
                 return;
 
             StorageFile answersFile = await LoadAnswersFile();
-            // If a file didn't exist, answers are marked as loaded and we don't need to read the file
+            // If a file didn't exist, Answers are marked as loaded and we don't need to read the file
             if (m_isAnswersLoaded)
                 return;
             // TODO: Check what happens if answersFile was just created. Does it crash?
@@ -135,7 +133,7 @@ namespace SteelFlashcards
         // StorageFile or basic .NET file handling. StorageFile gives me async and UI update issues and takes a long time
         private void LoadAnswers2()
         {
-            // TODO: Ensure dictionary switch flushes answers and resets them
+            // TODO: Ensure dictionary switch flushes Answers and resets them
             if (m_isAnswersLoaded)
                 return;
 
@@ -144,7 +142,7 @@ namespace SteelFlashcards
                 return;
 
             //GetAnswersFolderPath()
-            // Answers file matches dictionary file name in answers directory
+            // Answers file matches dictionary file name in Answers directory
             string fileName = Path.GetFileNameWithoutExtension(m_loadedDictionary.FileName);
             fileName += "_answers.json";
             string fullName = Path.Join(GetAnswersFolderPath(), fileName);
@@ -285,6 +283,8 @@ namespace SteelFlashcards
             // TODO: multiple same words 
             foreach (var word in m_loadedDictionary.Content.WordEntries)
                 m_statistics.AddWord(word);
+            foreach (var answer in _answers)
+                m_statistics.AddAnswer(answer);
         }
 
         public DictionaryFile? GetLoadedDictionary()
@@ -388,41 +388,6 @@ namespace SteelFlashcards
                 sanitizedFileName = sanitizedFileName.Replace(c, '_');
             }
             return sanitizedFileName;
-        }
-
-        private void InitializeDummyStatistics()
-        {
-            m_statistics.AddWord(new WordEntry("a", ["a"], ["aaa"]));
-            m_statistics.AddWord(new WordEntry("aa", ["a"], ["aaa"]));
-            m_statistics.AddWord(new WordEntry("b", ["b"], ["bbb"]));
-            m_statistics.AddWord(new WordEntry("bb", ["b"], ["bbb"]));
-            m_statistics.AddWord(new WordEntry("ab", ["ab"], ["bbb", "aaa"]));
-            m_statistics.AddWord(new WordEntry("c", ["c"], ["ccc"]));
-            m_statistics.AddWord(new WordEntry("cc", ["c"], ["ccc"]));
-            m_statistics.AddWord(new WordEntry("ccc", ["c"], ["ccc"]));
-            m_statistics.AddAnswer(new Answer { Word = "a", Guess = "a", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
-            m_statistics.AddAnswer(new Answer { Word = "a", Guess = "a", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
-            m_statistics.AddAnswer(new Answer { Word = "a", Guess = "a", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
-            m_statistics.AddAnswer(new Answer { Word = "aa", Guess = "a", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
-            m_statistics.AddAnswer(new Answer { Word = "aa", Guess = "a", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
-            m_statistics.AddAnswer(new Answer { Word = "aa", Guess = "a", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
-            m_statistics.AddAnswer(new Answer { Word = "b", Guess = "b", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
-            m_statistics.AddAnswer(new Answer { Word = "b", Guess = "b", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
-            m_statistics.AddAnswer(new Answer { Word = "b", Guess = "b", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
-            m_statistics.AddAnswer(new Answer { Word = "bb", Guess = "b", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
-            m_statistics.AddAnswer(new Answer { Word = "bb", Guess = "b", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
-            m_statistics.AddAnswer(new Answer { Word = "ab", Guess = "ab", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
-            m_statistics.AddAnswer(new Answer { Word = "ab", Guess = "abb", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
-            m_statistics.AddAnswer(new Answer { Word = "ab", Guess = "abb", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
-            m_statistics.AddAnswer(new Answer { Word = "c", Guess = "d", IsCorrect = false, AttemptDateTime = System.DateTimeOffset.Now });
-            m_statistics.AddAnswer(new Answer { Word = "c", Guess = "c", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
-            m_statistics.AddAnswer(new Answer { Word = "c", Guess = "c", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
-            m_statistics.AddAnswer(new Answer { Word = "cc", Guess = "c", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
-            m_statistics.AddAnswer(new Answer { Word = "cc", Guess = "c", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
-            m_statistics.AddAnswer(new Answer { Word = "cc", Guess = "c", IsCorrect = true, AttemptDateTime = System.DateTimeOffset.Now });
-            m_statistics.AddAnswer(new Answer { Word = "cc", Guess = "d", IsCorrect = false, AttemptDateTime = System.DateTimeOffset.Now });
-            m_statistics.AddAnswer(new Answer { Word = "cc", Guess = "d", IsCorrect = false, AttemptDateTime = System.DateTimeOffset.Now });
-            m_statistics.CalculateMastery();
         }
     }
 }

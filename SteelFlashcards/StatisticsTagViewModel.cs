@@ -23,10 +23,10 @@ namespace SteelFlashcards
         public void InitializeTagStatistic(string? tagName)
         {
             if (tagName == null)
-                throw new ApplicationException("Dev: tagName is null in InitializeTagStatistic");
+                throw new ApplicationException("Dev: TagName is null in InitializeTagStatistic");
             SelectedTag = _dataService.GetTagStatistic(tagName);
             if (SelectedTag == null)
-                throw new ApplicationException("Dev: _dataService.GetTagStatistic(tagName) returned null in InitializeTagStatistic");
+                throw new ApplicationException("Dev: _dataService.GetTagStatistic(TagName) returned null in InitializeTagStatistic");
 
             //MasteredWordsString = SelectedTag.GetWordsMasteryString();
         }

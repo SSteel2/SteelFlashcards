@@ -11,13 +11,33 @@
     <StackPanel Orientation="Vertical">
         <StackPanel Orientation="Horizontal" Margin="12,12,0,0"> <!--Top row with tag and mastery counter-->
             <Border x:Name="TagBorder" BorderThickness="1" BorderBrush="Black" CornerRadius="12">
-                <TextBlock Text="{x:Bind ViewModel.SelectedTag.tagName}" Padding="8,2" HorizontalAlignment="Center"/>
+                <TextBlock Text="{x:Bind ViewModel.SelectedTag.TagName}" Padding="8,2" HorizontalAlignment="Center"/>
             </Border>
             <TextBlock Text="{x:Bind ViewModel.SelectedTag.GetWordsMasteryString()}" Margin="20,4,0,0"/>
         </StackPanel>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Padding="12">
             <Button Content="Back" Command="{x:Bind ViewModel.GoBackCommand}"/>
         </StackPanel>
-        <TextBlock Text="Tag stats page"/>
+        <ListView ItemsSource="{x:Bind ViewModel.SelectedTag.Words}" Margin="12" SelectionMode="Single">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="local:WordStatistic">
+                    <Expander HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                        <Expander.Header>
+                            <TextBlock Text="{x:Bind Word}"/>
+                        </Expander.Header>
+                        <ListView ItemsSource="{x:Bind Answers}" SelectionMode="None">
+                            <ListView.ItemTemplate>
+                                <DataTemplate x:DataType="local:Answer">
+                                    <StackPanel Orientation="Horizontal" Spacing="12">
+                                        <TextBlock Text="{x:Bind AttemptDateTime}"/>
+                                        <TextBlock Text="{x:Bind IsCorrect}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </Expander>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
     </StackPanel>
 </Page>

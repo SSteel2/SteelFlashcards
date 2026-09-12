@@ -3,56 +3,54 @@ using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using Windows.Graphics.Display;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SteelFlashcards
 {
     public class WordStatistic(string word)
     {
-        string word = word;
-        List<Answer> answers = [];
+        public string Word = word;
+        public List<Answer> Answers = [];
         // TODO: proper access modifiers, once I figure out the classes
         public bool isMastered;
 
         public void AddAnswer(Answer answer)
         {
-            answers.Add(answer);
+            Answers.Add(answer);
         }
 
         public bool CalculateMastery()
         {
-            if (answers.Count < 3)
+            if (Answers.Count < 3)
             {
                 isMastered = false;
                 return false;
             }
             // TODO: check if dates are in correct order
-            answers.Sort((x, y) => x.AttemptDateTime.CompareTo(y.AttemptDateTime));
+            Answers.Sort((x, y) => x.AttemptDateTime.CompareTo(y.AttemptDateTime));
 
             // TODO: check if last answer is less than 90 days ago
-            isMastered = answers[^1].IsCorrect && answers[^2].IsCorrect && answers[^3].IsCorrect;
+            isMastered = Answers[^1].IsCorrect && Answers[^2].IsCorrect && Answers[^3].IsCorrect;
             return isMastered;
         }
     }
 
     public class TagStatistic(string tagName)
     {
-        // TODO: Fix casing
-        public string tagName = tagName;
+        public string TagName = tagName;
         int wordsMastered = 0;
         int wordsTotal = 0;
-        List<WordStatistic> words = [];
+        public List<WordStatistic> Words = [];
 
         public void LinkWordStatistic(WordStatistic wordStatistic)
         {
-            words.Add(wordStatistic);
+            Words.Add(wordStatistic);
             wordsTotal++;
         }
 
         public bool CalculateMastery()
         {
-            foreach (WordStatistic word in words)
+            foreach (WordStatistic word in Words)
             {
                 if (word.isMastered)
                     wordsMastered++;
@@ -103,7 +101,7 @@ namespace SteelFlashcards
         // AddAnswer
         public void AddAnswer(Answer answer)
         {
-            // There might be deleted words in word entries with previous answers
+            // There might be deleted words in word entries with previous Answers
             if (!words.ContainsKey(answer.Word))
                 return;
 
@@ -148,7 +146,7 @@ namespace SteelFlashcards
         private IDataService _dataService;
         private INavigationService _navigationService;
 
-        private Statistics m_statistics = new();
+        private Statistics m_statistics;
 
         [ObservableProperty]
         private string loadedDictionaryName;
@@ -172,6 +170,7 @@ namespace SteelFlashcards
         }
 
         [RelayCommand]
+        [MemberNotNull(nameof(m_statistics))]
         public void LoadStatistics()
         {
             m_statistics = _dataService.GetStatistics();
@@ -188,7 +187,7 @@ namespace SteelFlashcards
         {
             if (SelectedTag == null)
                 throw new ApplicationException("Dev Error: SelectedTag is null in ViewTag");
-            _navigationService.NavigateTo(nameof(StatisticsTagPage), SelectedTag.tagName);
+            _navigationService.NavigateTo(nameof(StatisticsTagPage), SelectedTag.TagName);
         }
 
         private bool IsTagSelected()
