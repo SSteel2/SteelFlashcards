@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace LanguageLearn2
+namespace SteelFlashcards
 {
     public partial class LearnViewModel : ObservableObject
     {

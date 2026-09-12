@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace LanguageLearn2
+namespace SteelFlashcards
 {
     public partial class EditViewModel : ObservableObject
     {

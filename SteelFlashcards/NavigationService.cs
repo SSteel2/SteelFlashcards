@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LanguageLearn2
+namespace SteelFlashcards
 {
     public interface INavigationService
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LanguageLearn2
+namespace SteelFlashcards
 {
     public class Answer
     {

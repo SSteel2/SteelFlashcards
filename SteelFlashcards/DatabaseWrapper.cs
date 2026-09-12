@@ -8,7 +8,7 @@ using System.Text.Json.Serialization;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.ComponentModel;
 
-namespace LanguageLearn2
+namespace SteelFlashcards
 {
     public class WordEntry
     {

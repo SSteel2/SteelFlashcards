@@ -6,7 +6,7 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Windows.Graphics.Display;
 
-namespace LanguageLearn2
+namespace SteelFlashcards
 {
     public class WordStatistic(string word)
     {

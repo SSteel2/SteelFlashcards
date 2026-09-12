@@ -5,7 +5,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Windows.Storage;
 
-namespace LanguageLearn2
+namespace SteelFlashcards
 {
     public interface IDataService
     {

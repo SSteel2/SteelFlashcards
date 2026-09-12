@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 
-namespace LanguageLearn2
+namespace SteelFlashcards
 {
     public partial class DictionariesViewModel : ObservableObject
     {

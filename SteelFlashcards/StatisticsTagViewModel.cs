@@ -2,7 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using System;
 
-namespace LanguageLearn2
+namespace SteelFlashcards
 {
     public partial class StatisticsTagViewModel : ObservableObject
     {
