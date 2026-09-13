@@ -2,39 +2,38 @@
 using CommunityToolkit.Mvvm.Input;
 using System;
 
-namespace SteelFlashcards
+namespace SteelFlashcards;
+
+public partial class StatisticsTagViewModel : ObservableObject
 {
-    public partial class StatisticsTagViewModel : ObservableObject
+    private IDataService _dataService;
+    private INavigationService _navigationService;
+
+    [ObservableProperty]
+    private TagStatistic selectedTag;
+    //[ObservableProperty]
+    //private string masteredWordsString;
+
+    public StatisticsTagViewModel(IDataService dataService, INavigationService navigationService)
     {
-        private IDataService _dataService;
-        private INavigationService _navigationService;
+        _dataService = dataService;
+        _navigationService = navigationService;
+    }
 
-        [ObservableProperty]
-        private TagStatistic selectedTag;
-        //[ObservableProperty]
-        //private string masteredWordsString;
+    public void InitializeTagStatistic(string? tagName)
+    {
+        if (tagName == null)
+            throw new ApplicationException("Dev: TagName is null in InitializeTagStatistic");
+        SelectedTag = _dataService.GetTagStatistic(tagName);
+        if (SelectedTag == null)
+            throw new ApplicationException("Dev: _dataService.GetTagStatistic(TagName) returned null in InitializeTagStatistic");
 
-        public StatisticsTagViewModel(IDataService dataService, INavigationService navigationService)
-        {
-            _dataService = dataService;
-            _navigationService = navigationService;
-        }
+        //MasteredWordsString = SelectedTag.GetWordsMasteryString();
+    }
 
-        public void InitializeTagStatistic(string? tagName)
-        {
-            if (tagName == null)
-                throw new ApplicationException("Dev: TagName is null in InitializeTagStatistic");
-            SelectedTag = _dataService.GetTagStatistic(tagName);
-            if (SelectedTag == null)
-                throw new ApplicationException("Dev: _dataService.GetTagStatistic(TagName) returned null in InitializeTagStatistic");
-
-            //MasteredWordsString = SelectedTag.GetWordsMasteryString();
-        }
-
-        [RelayCommand]
-        private void GoBack()
-        {
-            _navigationService.GoBack();
-        }
+    [RelayCommand]
+    private void GoBack()
+    {
+        _navigationService.GoBack();
     }
 }

@@ -6,27 +6,26 @@ using System;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace SteelFlashcards
+namespace SteelFlashcards;
+
+/// <summary>
+/// An empty page that can be used on its own or navigated to within a Frame.
+/// </summary>
+public sealed partial class StatisticsTagPage : Page
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
-    public sealed partial class StatisticsTagPage : Page
+    public StatisticsTagViewModel ViewModel;
+
+    public StatisticsTagPage()
     {
-        public StatisticsTagViewModel ViewModel;
+        ViewModel = App.ServiceProvider.GetService<StatisticsTagViewModel>();
+        if (ViewModel == null)
+            throw new ApplicationException("Dev: Missing StatisticsViewModel Service");
+        InitializeComponent();
+    }
 
-        public StatisticsTagPage()
-        {
-            ViewModel = App.ServiceProvider.GetService<StatisticsTagViewModel>();
-            if (ViewModel == null)
-                throw new ApplicationException("Dev: Missing StatisticsViewModel Service");
-            InitializeComponent();
-        }
-
-        protected override void OnNavigatedTo(NavigationEventArgs e)
-        {
-            ViewModel.InitializeTagStatistic(e.Parameter as string);
-            base.OnNavigatedTo(e);
-        }
+    protected override void OnNavigatedTo(NavigationEventArgs e)
+    {
+        ViewModel.InitializeTagStatistic(e.Parameter as string);
+        base.OnNavigatedTo(e);
     }
 }
