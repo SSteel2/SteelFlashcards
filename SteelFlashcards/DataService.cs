@@ -27,7 +27,7 @@ namespace SteelFlashcards
         IList<DictionaryFile> GetDictionaries();
         DictionaryFile? GetLoadedDictionary();
 
-        // temp (until I decide on a proper way where to store data)
+        // TODO: temp (until I decide on a proper way where to store data)
         Statistics GetStatistics();
         TagStatistic? GetTagStatistic(string tagName);
     }
@@ -48,21 +48,19 @@ namespace SteelFlashcards
 
         public DataService()
         {
+            // TODO: This looks clunky, I should refactor
             ReadDictionaries();
             if (m_dictionaryFiles.Count == 0)
             {
                 CopyTemplateDictionary();
                 ReadDictionaries();
             }
-            // TODO: For simplicity, the first dictionary is the selected dictionary for now
             if (m_dictionaryFiles.Count == 0)
             {
                 throw new ApplicationException("Template dictionary could not be copied");
             }
-            //m_loadedDictionary = m_dictionaryFiles[0];
-            //m_loadedDictionary.IsLoaded = true;
-            //_words = m_loadedDictionary.Content.WordEntries;
-            LoadDictionary(m_dictionaryFiles[0]);
+
+            LoadDictionary(GetLastUsedDictionaryFile());
 
             _answers = [];
             _answersBuffer = [];
@@ -85,6 +83,7 @@ namespace SteelFlashcards
         public void AddAnswer(LearnPageAnswer answer)
         {
             _answersBuffer.Add(answer);
+            m_statistics.AddAnswer(answer);
         }
 
         // TODO: Move private methods to bottom. Even better, seperate this class into seperate ones as there are too many things in here
@@ -271,6 +270,7 @@ namespace SteelFlashcards
                 m_loadedDictionary.IsLoaded = false;
             m_loadedDictionary = dictionary;
             m_loadedDictionary.IsLoaded = true;
+            UserConfiguration.LastUsedDictionary = m_loadedDictionary.DictionaryName;
             _words = m_loadedDictionary.Content.WordEntries;
 
             // TODO: Loading with StorageFile is really slow, albeit most robust
@@ -334,6 +334,26 @@ namespace SteelFlashcards
             {
                 FileName = fileName
             };
+        }
+
+        private DictionaryFile GetLastUsedDictionaryFile()
+        {
+            DictionaryFile? dictionaryFile = null;
+            string? lastUsedDictionaryName = UserConfiguration.LastUsedDictionary;
+            if (lastUsedDictionaryName != null)
+            {
+                foreach (DictionaryFile dictionary in m_dictionaryFiles)
+                {
+                    if (dictionary.DictionaryName == lastUsedDictionaryName)
+                    {
+                        dictionaryFile = dictionary;
+                        break;
+                    }
+                }
+            }
+            if (lastUsedDictionaryName == null || dictionaryFile == null)
+                dictionaryFile = m_dictionaryFiles[0];
+            return dictionaryFile;
         }
 
         private static void Save(DictionaryFile dictionaryFile)
