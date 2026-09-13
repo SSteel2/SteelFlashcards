@@ -14,15 +14,19 @@
     </Page.Resources>
 
     <StackPanel Orientation="Vertical">
-        <StackPanel Orientation="Horizontal" Margin="12,12,0,0"> <!--Top row with tag and mastery counter-->
-            <Border x:Name="TagBorder" BorderThickness="1" BorderBrush="Black" CornerRadius="12">
-                <TextBlock Text="{x:Bind ViewModel.SelectedTag.TagName}" Padding="8,2" HorizontalAlignment="Center"/>
-            </Border>
-            <TextBlock Text="{x:Bind ViewModel.SelectedTag.GetWordsMasteryString()}" Margin="20,4,0,0"/>
-        </StackPanel>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Padding="12">
-            <Button Content="Back" Command="{x:Bind ViewModel.GoBackCommand}"/>
-        </StackPanel>
+        <Grid Margin="12,12,12,0"> <!--Top row with tag, mastery counter and Back button-->
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                <Border x:Name="TagBorder" BorderThickness="1" BorderBrush="Black" CornerRadius="12">
+                    <TextBlock Text="{x:Bind ViewModel.SelectedTag.TagName}" Padding="8,2" HorizontalAlignment="Center"/>
+                </Border>
+                <TextBlock Text="{x:Bind ViewModel.SelectedTag.GetWordsMasteryString()}" Margin="20,4,0,0"/>
+            </StackPanel>
+            <Button Grid.Column="1" Content="Back" Command="{x:Bind ViewModel.GoBackCommand}" VerticalAlignment="Center"/>
+        </Grid>
         <ListView ItemsSource="{x:Bind ViewModel.SelectedTag.Words}" Margin="12" SelectionMode="Single">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="local:WordStatistic">
