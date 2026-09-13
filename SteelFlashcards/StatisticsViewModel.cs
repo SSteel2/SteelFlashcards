@@ -163,11 +163,13 @@ namespace SteelFlashcards
         // Calculates mastery when all words are added
         public void CalculateMastery()
         {
+            wordsMastered = 0;
             foreach (var word in words)
             {
                 if (word.Value.IsMastered)
                     wordsMastered++;
             }
+            tagsMastered = 0;
             foreach (var tag in tags)
             {
                 if (tag.Value.IsMastered)
@@ -226,6 +228,7 @@ namespace SteelFlashcards
         public void LoadStatistics()
         {
             m_statistics = _dataService.GetStatistics();
+            m_statistics.CalculateMastery();
             MasteredTagsString = m_statistics.GetTagsMasteryString();
             MasteredWordsString = m_statistics.GetWordsMasteryString();
             foreach (var tag in m_statistics.tags)
