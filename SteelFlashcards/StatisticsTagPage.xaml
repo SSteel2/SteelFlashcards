@@ -19,8 +19,15 @@
         <GridLength x:Key="ColMastered">80</GridLength>
     </Page.Resources>
 
-    <StackPanel Orientation="Vertical">
-        <Grid Margin="12,12,12,0"> <!--Top row with tag, mastery counter and Back button-->
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/> <!-- tag / mastery / Back -->
+            <RowDefinition Height="Auto"/> <!-- Table header -->
+            <RowDefinition Height="*"/>    <!-- Statistics content -->
+        </Grid.RowDefinitions>
+
+        <!--Top row with tag, mastery counter and Back button-->
+        <Grid Grid.Row="0" Margin="12,12,12,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
@@ -34,8 +41,8 @@
             <Button Grid.Column="1" Content="Back" Command="{x:Bind ViewModel.GoBackCommand}" VerticalAlignment="Center"/>
         </Grid>
 
-        <!-- Header row: right padding reserves space for the Expander's chevron on the right -->
-        <Grid Margin="12,12,12,0" Padding="16,0,60,4" ColumnSpacing="12">
+        <!-- Table header -->
+        <Grid Grid.Row="1" Margin="12,12,12,0" Padding="16,0,60,4" ColumnSpacing="12">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="{StaticResource ColWord}"/>
                 <ColumnDefinition Width="{StaticResource ColLastAttempt}"/>
@@ -50,7 +57,7 @@
             <TextBlock Grid.Column="4" Text="Mastered" FontWeight="SemiBold" HorizontalAlignment="Center"/>
         </Grid>
 
-        <ListView ItemsSource="{x:Bind ViewModel.SelectedTag.Words}" Margin="12,0,12,12" Padding="0"
+        <ListView Grid.Row="2" ItemsSource="{x:Bind ViewModel.SelectedTag.Words}" Margin="12,0,12,12"
                   SelectionMode="Single"
                   HorizontalContentAlignment="Stretch">
             <ListView.ItemContainerStyle>
@@ -97,5 +104,5 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-    </StackPanel>
+    </Grid>
 </Page>

@@ -116,6 +116,7 @@ namespace SteelFlashcards
     }
 
     // View model class representing statistics calculated on the fly
+    // TODO: All 3 statistics classes should be seperated from ViewModel logic
     public class Statistics
     {
         int tagsMastered = 0;
