@@ -179,6 +179,7 @@ namespace SteelFlashcards
             return _words;
         }
 
+        // TODO: Maybe move active tags to LearnSelectionViewModel
         public IList<DictionaryTag> GetActiveTags()
         {
             return m_activeTags;

@@ -30,7 +30,14 @@ namespace SteelFlashcards
         [RelayCommand]
         private void AcceptNavigate()
         {
-            _dataService.SetActiveTags(SelectedTags);
+            if (SelectedTags.Count == 0)
+            {
+                _dataService.SetActiveTags(_tags);
+            }
+            else
+            {
+                _dataService.SetActiveTags(SelectedTags);
+            }
             _navigationService.NavigateTo(nameof(LearnPage));
         }
 
