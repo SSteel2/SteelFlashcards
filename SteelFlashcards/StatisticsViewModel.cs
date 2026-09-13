@@ -12,7 +12,7 @@ namespace SteelFlashcards
         public string Word = word;
         public List<Answer> Answers = [];
         // TODO: proper access modifiers, once I figure out the classes
-        private bool? isMastered;
+        private bool? m_isMastered;
 
         private int m_correctAttempts = 0;
         private int m_recentAttempts = 0;
@@ -34,25 +34,25 @@ namespace SteelFlashcards
         public bool IsMastered
         {
             get {
-                if (isMastered == null)
+                if (m_isMastered == null)
                     CalculateMastery();
-                return isMastered.Value;
+                return m_isMastered.Value;
             }
         }
 
-        [MemberNotNull(nameof(isMastered))]
+        [MemberNotNull(nameof(m_isMastered))]
         private void CalculateMastery()
         {
             if (Answers.Count < 3)
             {
-                isMastered = false;
+                m_isMastered = false;
                 return;
             }
             // TODO: check if dates are in correct order
             Answers.Sort((x, y) => x.AttemptDateTime.CompareTo(y.AttemptDateTime));
 
             // TODO: check if last answer is less than 90 days ago
-            isMastered = Answers[^1].IsCorrect && Answers[^2].IsCorrect && Answers[^3].IsCorrect;
+            m_isMastered = Answers[^1].IsCorrect && Answers[^2].IsCorrect && Answers[^3].IsCorrect;
         }
 
         public DateTimeOffset LastAttempt
@@ -79,29 +79,39 @@ namespace SteelFlashcards
     public class TagStatistic(string tagName)
     {
         public string TagName = tagName;
-        int wordsMastered = 0;
-        int wordsTotal = 0;
         public List<WordStatistic> Words = [];
+        
+        private int? m_wordsMastered;
 
-        public void LinkWordStatistic(WordStatistic wordStatistic)
+        public int WordsMastered
         {
-            Words.Add(wordStatistic);
-            wordsTotal++;
+            get
+            {
+                m_wordsMastered ??= CountMasteredWords();
+                return m_wordsMastered.Value;
+            }
         }
-
-        public bool CalculateMastery()
+        private int CountMasteredWords()
         {
+            int wordsMastered = 0;
             foreach (WordStatistic word in Words)
             {
                 if (word.IsMastered)
                     wordsMastered++;
             }
-            return wordsTotal == wordsMastered;
+            return wordsMastered;
         }
+
+        public void LinkWordStatistic(WordStatistic wordStatistic)
+        {
+            Words.Add(wordStatistic);
+        }
+
+        public bool IsMastered { get { return Words.Count == WordsMastered; } }
 
         public string GetWordsMasteryString()
         {
-            return "Mastery: " + Statistics.GetFractionString(wordsMastered, wordsTotal);
+            return "Mastery: " + Statistics.GetFractionString(WordsMastered, Words.Count);
         }
     }
 
@@ -159,7 +169,7 @@ namespace SteelFlashcards
             }
             foreach (var tag in tags)
             {
-                if (tag.Value.CalculateMastery())
+                if (tag.Value.IsMastered)
                     tagsMastered++;
             }
         }
