@@ -33,11 +33,10 @@
                                 <TextBlock Text="{x:Bind LastAttempt}" VerticalAlignment="Center" Opacity="0.7"/>
                                 <TextBlock Text="{x:Bind TotalAttemptsString()}" VerticalAlignment="Center"/>
                                 <TextBlock Text="{x:Bind RecentAttemptsString()}" VerticalAlignment="Center"/>
-                                <FontIcon Glyph="&#xE735;"
-                                          FontFamily="{StaticResource SymbolThemeFontFamily}"
-                                          Foreground="Gold"
-                                          VerticalAlignment="Center"
-                                          Visibility="{x:Bind IsMastered, Converter={StaticResource BoolToVis}}"/>
+                                <SymbolIcon Symbol="SolidStar"
+                                            Foreground="Gold"
+                                            VerticalAlignment="Center"
+                                            Visibility="{x:Bind IsMastered, Converter={StaticResource BoolToVis}}"/>
                             </StackPanel>
                         </Expander.Header>
                         <ListView ItemsSource="{x:Bind Answers}" SelectionMode="None">
