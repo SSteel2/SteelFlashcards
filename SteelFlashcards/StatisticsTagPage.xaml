@@ -11,6 +11,12 @@
 
     <Page.Resources>
         <converters:BoolToVisibilityConverter x:Key="BoolToVis" />
+
+        <GridLength x:Key="ColWord">*</GridLength>
+        <GridLength x:Key="ColLastAttempt">200</GridLength>
+        <GridLength x:Key="ColTotal">80</GridLength>
+        <GridLength x:Key="ColRecent">80</GridLength>
+        <GridLength x:Key="ColMastered">80</GridLength>
     </Page.Resources>
 
     <StackPanel Orientation="Vertical">
@@ -27,21 +33,55 @@
             </StackPanel>
             <Button Grid.Column="1" Content="Back" Command="{x:Bind ViewModel.GoBackCommand}" VerticalAlignment="Center"/>
         </Grid>
-        <ListView ItemsSource="{x:Bind ViewModel.SelectedTag.Words}" Margin="12" SelectionMode="Single">
+
+        <!-- Header row: right padding reserves space for the Expander's chevron on the right -->
+        <Grid Margin="12,12,12,0" Padding="16,0,60,4" ColumnSpacing="12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="{StaticResource ColWord}"/>
+                <ColumnDefinition Width="{StaticResource ColLastAttempt}"/>
+                <ColumnDefinition Width="{StaticResource ColTotal}"/>
+                <ColumnDefinition Width="{StaticResource ColRecent}"/>
+                <ColumnDefinition Width="{StaticResource ColMastered}"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="Word" FontWeight="SemiBold"/>
+            <TextBlock Grid.Column="1" Text="Last Attempt" FontWeight="SemiBold"/>
+            <TextBlock Grid.Column="2" Text="Total" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+            <TextBlock Grid.Column="3" Text="Recent" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+            <TextBlock Grid.Column="4" Text="Mastered" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+        </Grid>
+
+        <ListView ItemsSource="{x:Bind ViewModel.SelectedTag.Words}" Margin="12,0,12,12" Padding="0"
+                  SelectionMode="Single"
+                  HorizontalContentAlignment="Stretch">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem" BasedOn="{StaticResource DefaultListViewItemStyle}">
+                    <Setter Property="MinHeight" Value="0"/>
+                    <Setter Property="Padding" Value="0"/>
+                </Style>
+            </ListView.ItemContainerStyle>
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="local:WordStatistic">
-                    <Expander HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                    <Expander HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" MinHeight="0" Padding="0">
                         <Expander.Header>
-                            <StackPanel Orientation="Horizontal" Spacing="12">
-                                <TextBlock Text="{x:Bind Word}" FontWeight="SemiBold" VerticalAlignment="Center"/>
-                                <TextBlock Text="{x:Bind LastAttempt}" VerticalAlignment="Center" Opacity="0.7"/>
-                                <TextBlock Text="{x:Bind TotalAttemptsString()}" VerticalAlignment="Center"/>
-                                <TextBlock Text="{x:Bind RecentAttemptsString()}" VerticalAlignment="Center"/>
-                                <SymbolIcon Symbol="SolidStar"
+                            <Grid ColumnSpacing="12" HorizontalAlignment="Stretch">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="{StaticResource ColWord}"/>
+                                    <ColumnDefinition Width="{StaticResource ColLastAttempt}"/>
+                                    <ColumnDefinition Width="{StaticResource ColTotal}"/>
+                                    <ColumnDefinition Width="{StaticResource ColRecent}"/>
+                                    <ColumnDefinition Width="{StaticResource ColMastered}"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="{x:Bind Word}" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="1" Text="{x:Bind LastAttempt}" VerticalAlignment="Center" Opacity="0.7"/>
+                                <TextBlock Grid.Column="2" Text="{x:Bind TotalAttemptsString()}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                <TextBlock Grid.Column="3" Text="{x:Bind RecentAttemptsString()}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                <SymbolIcon Grid.Column="4"
+                                            Symbol="SolidStar"
                                             Foreground="Gold"
                                             VerticalAlignment="Center"
+                                            HorizontalAlignment="Center"
                                             Visibility="{x:Bind IsMastered, Converter={StaticResource BoolToVis}}"/>
-                            </StackPanel>
+                            </Grid>
                         </Expander.Header>
                         <ListView ItemsSource="{x:Bind Answers}" SelectionMode="None">
                             <ListView.ItemTemplate>

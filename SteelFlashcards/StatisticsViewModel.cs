@@ -115,6 +115,7 @@ namespace SteelFlashcards
         }
     }
 
+    // View model class representing statistics calculated on the fly
     public class Statistics
     {
         int tagsMastered = 0;
