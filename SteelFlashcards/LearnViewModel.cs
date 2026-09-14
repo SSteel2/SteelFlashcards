@@ -22,14 +22,14 @@ public partial class LearnViewModel : ObservableObject
 
     private readonly List<WordEntry> m_words = [];
 
-    private readonly Random m_randomGenerator;
-
     private readonly AppWindow m_appWindow;
     private bool m_isApplicationClosing;
 
     private readonly ObservableCollection<LearnPageAnswer> answers = [];
 
     public ObservableCollection<LearnPageAnswer> Answers { get { return answers; } }
+
+    private readonly Teacher m_teacher;
 
     [ObservableProperty]
     private LearnPageAnswer? lastAnswer;
@@ -40,7 +40,9 @@ public partial class LearnViewModel : ObservableObject
         _navigationService = navigationService;
         //m_words = _dataService.GetWords();
         InitializeWords();
-        m_randomGenerator = new Random();
+
+        // Teacher
+        m_teacher = new Teacher(m_words, _dataService.GetStatistics());
         LastAnswer = null;
         SetNextWord();
 
@@ -69,6 +71,7 @@ public partial class LearnViewModel : ObservableObject
         answers.Add(answer);
         _dataService.AddAnswer(answer);
         LastAnswer = answer;
+        m_teacher.AddAnswer(answer);
         SetNextWord();
     }
 
@@ -104,8 +107,7 @@ public partial class LearnViewModel : ObservableObject
             CurrentWord = "[No Words in Dictionary]";
             return;
         }
-        int nextIndex = m_randomGenerator.Next(0, m_words.Count);
-        m_currentWordEntry = m_words[nextIndex];
+        m_currentWordEntry = m_teacher.GetNextWord();
         CurrentWord = m_currentWordEntry.Word;
     }
 

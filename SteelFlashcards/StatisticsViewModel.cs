@@ -7,9 +7,28 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace SteelFlashcards;
 
+public enum WordMasteryLevel
+{
+    // Word answered correctly last 3+ attempts, and last answer is less than 90 days ago
+    Mastered,
+    // Word answered correctly last 3+ attempts, but last answer is more than 90 days ago
+    Stale,
+    // Word answered correctly last 2 attempts
+    True_2,
+    // Word answered correctly last attempt
+    True_1,
+    // Word never attempted
+    Zero,
+    // Word answered incorrectly last attempt
+    False_1,
+    // Word answered incorrectly last 2+ attempts
+    False_2
+}
+
 public class WordStatistic(string word)
 {
     public string Word = word;
+    // TODO: Ensure that answers are added in chronological order so that no ordering is needed afterwards
     public List<Answer> Answers = [];
     // TODO: proper access modifiers, once I figure out the classes
     private bool? m_isMastered;
@@ -62,6 +81,46 @@ public class WordStatistic(string word)
                 return DateTimeOffset.MinValue;
             Answers.Sort((x, y) => x.AttemptDateTime.CompareTo(y.AttemptDateTime));
             return Answers[^1].AttemptDateTime;
+        }
+    }
+
+    public WordMasteryLevel CalculateMasteryLevel()
+    {
+        if (Answers.Count == 0)
+            return WordMasteryLevel.Zero;
+        Answers.Sort((x, y) => x.AttemptDateTime.CompareTo(y.AttemptDateTime));
+
+        // TODO: check ordering
+        bool streakValue = Answers[^1].IsCorrect;
+        int streakCount = 1;
+        if (Answers.Count > 1 && Answers[^2].IsCorrect == streakValue)
+        {
+            streakCount++;
+            if (Answers.Count > 2 && Answers[^3].IsCorrect == streakValue)
+                streakCount++;
+        }
+
+        if (!streakValue)
+        {
+            if (streakCount == 1)
+                return WordMasteryLevel.False_1;
+            else
+                return WordMasteryLevel.False_2;
+
+        }
+        else
+        {
+            if (streakCount == 1)
+                return WordMasteryLevel.True_1;
+            else if (streakCount == 2)
+                return WordMasteryLevel.True_2;
+            else
+            {
+                if (Answers[^1].AttemptDateTime < DateTimeOffset.Now.AddDays(-90))
+                    return WordMasteryLevel.Stale;
+                else
+                    return WordMasteryLevel.Mastered;
+            }
         }
     }
 
@@ -176,6 +235,11 @@ public class Statistics
             if (tag.Value.IsMastered)
                 tagsMastered++;
         }
+    }
+
+    public WordMasteryLevel CalculateWordMasteryLevel(WordEntry word)
+    {
+        return words[word.Word].CalculateMasteryLevel();
     }
 
     // TODO: Move next 3 methods to StatisticsViewModel
