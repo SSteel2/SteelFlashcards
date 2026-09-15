@@ -15,34 +15,31 @@ public partial class LearnViewModel : ObservableObject
     private IDataService _dataService;
     private INavigationService _navigationService;
 
-    [ObservableProperty]
-    private string? currentWord;
-
-    private WordEntry? m_currentWordEntry;
-
-    private readonly List<WordEntry> m_words = [];
-
-    private readonly AppWindow m_appWindow;
-    private bool m_isApplicationClosing;
+    [ObservableProperty] private string? currentWord;
+    [ObservableProperty] [NotifyPropertyChangedFor(nameof(AllWordsMastered))] private int? wordCount;
+    [ObservableProperty] [NotifyPropertyChangedFor(nameof(AllWordsMastered))] private int? masteryCount;
+    public bool AllWordsMastered => WordCount is int count && count > 0 && MasteryCount == count;
+    [ObservableProperty] private LearnPageAnswer? lastAnswer;
 
     private readonly ObservableCollection<LearnPageAnswer> answers = [];
-
     public ObservableCollection<LearnPageAnswer> Answers { get { return answers; } }
 
+    private readonly List<WordEntry> m_words = [];
+    private WordEntry? m_currentWordEntry;
+    private readonly Statistics m_statistics;
     private readonly Teacher m_teacher;
-
-    [ObservableProperty]
-    private LearnPageAnswer? lastAnswer;
+    private readonly AppWindow m_appWindow;
+    private bool m_isApplicationClosing;
 
     public LearnViewModel(IDataService dataService, INavigationService navigationService)
     {
         _dataService = dataService;
         _navigationService = navigationService;
-        //m_words = _dataService.GetWords();
+        m_statistics = _dataService.GetStatistics();
         InitializeWords();
 
         // Teacher
-        m_teacher = new Teacher(m_words, _dataService.GetStatistics());
+        m_teacher = new Teacher(m_words, m_statistics);
         LastAnswer = null;
         SetNextWord();
 
@@ -72,6 +69,8 @@ public partial class LearnViewModel : ObservableObject
         _dataService.AddAnswer(answer);
         LastAnswer = answer;
         m_teacher.AddAnswer(answer);
+        // TODO: Very inefficient, but will do for now
+        CalculateMasteryCount();
         SetNextWord();
     }
 
@@ -97,6 +96,18 @@ public partial class LearnViewModel : ObservableObject
         foreach (WordEntry wordEntry in dictionaryWords)
             if (wordEntry.Tags.Intersect(activeTags.Select(x => x.TagName)).Any())
                 m_words.Add(wordEntry);
+        WordCount = m_words.Count;
+        CalculateMasteryCount();
+    }
+
+    // TODO: This is so inefficient and even out of place
+    private void CalculateMasteryCount()
+    {
+        int masteredWords = 0;
+        foreach (WordEntry word in m_words)
+            if (m_statistics.CalculateWordMasteryLevel(word) == WordMasteryLevel.Mastered)
+                masteredWords++;
+        MasteryCount = masteredWords;
     }
 
     private void SetNextWord()

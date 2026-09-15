@@ -48,6 +48,7 @@ public class WordStatistic(string word)
             if (answer.IsCorrect)
                 m_recentCorrectAttempts++;
         }
+        m_isMastered = null;
     }
 
     public bool IsMastered
@@ -59,6 +60,7 @@ public class WordStatistic(string word)
         }
     }
 
+    // TODO: this is really similar to calculate mastery level
     [MemberNotNull(nameof(m_isMastered))]
     private void CalculateMastery()
     {

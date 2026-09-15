@@ -6,12 +6,14 @@
     xmlns:local="using:SteelFlashcards"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:converters="using:CommunityToolkit.WinUI.Converters"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     Unloaded="Page_Unloaded">
 
     <Page.Resources>
         <local:BoolToIconConverter x:Key="BoolToIcon"/>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVis" />
     </Page.Resources>
 
     <Grid>
@@ -22,10 +24,36 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="280"/>
             <ColumnDefinition />
             <ColumnDefinition Width="360"/>
         </Grid.ColumnDefinitions>
-        <Grid Grid.Row="0" Background="{StaticResource CardStrokeColorDefault}" Margin="120,60,120,20" Padding="20" CornerRadius="4">
+        
+        <!-- Left pane -->
+        <StackPanel Grid.Column="0" Grid.Row="0" Grid.RowSpan="4" Padding="16" Spacing="8">
+            <Grid Background="{StaticResource CardStrokeColorDefault}" Padding="20" CornerRadius="4">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" Grid.Row="0" Text="Total" VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="1" Grid.Row="0" Text="{x:Bind ViewModel.WordCount, Mode=OneWay}" VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="0" Grid.Row="1" Text="Mastered" VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="1" Grid.Row="1" Text="{x:Bind ViewModel.MasteryCount, Mode=OneWay}" VerticalAlignment="Center"/>
+                <FontIcon Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" Glyph="&#xE735;"
+                          FontFamily="{ThemeResource SymbolThemeFontFamily}" FontSize="40" Foreground="Gold"
+                          Visibility="{x:Bind ViewModel.AllWordsMastered, Mode=OneWay, Converter={StaticResource BoolToVis}}"/>
+            </Grid>
+        </StackPanel>
+        
+        <!-- Center content -->
+        <Grid Grid.Column="1" Grid.Row="0" Background="{StaticResource CardStrokeColorDefault}" Margin="120,60,120,20" Padding="20" CornerRadius="4">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
@@ -46,8 +74,8 @@
             <TextBlock Text="{x:Bind ViewModel.LastAnswer.IsCorrect, Mode=OneWay, Converter={StaticResource BoolToIcon}}" Grid.Row="0" Grid.Column="2" Grid.RowSpan="4" FontSize="60" VerticalAlignment="Center"/>
         </Grid>
         <!--TODO: Focus on answer box on navigation to this page-->
-        <TextBlock Name="WordBlock" Text="{x:Bind ViewModel.CurrentWord, Mode=OneWay}" Grid.Row="1" Grid.Column="0" FontSize="80" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-        <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">
+        <TextBlock Grid.Column="1" Grid.Row="1" Name="WordBlock" Text="{x:Bind ViewModel.CurrentWord, Mode=OneWay}" FontSize="80" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <StackPanel Grid.Column="1" Grid.Row="2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
             <TextBox Name="GuessBox" PlaceholderText="meaning" FontSize="40" MinWidth="600" KeyUp="GuessBox_KeyUp"/>
             <Button Command="{x:Bind ViewModel.AcceptAnswerCommand}" CommandParameter="{x:Bind GuessBox.Text, Mode=OneWay}" VerticalAlignment="Stretch" Margin="8,0,0,0" Width="66" Click="AcceptButton_Click">
                 <SymbolIcon Symbol="Forward"/>
@@ -56,10 +84,13 @@
                 </Button.KeyboardAccelerators>
             </Button>
         </StackPanel>
-        <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right" Margin="20">
+        <StackPanel Grid.Column="1" Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="20">
             <Button Content="Reset" Command="{x:Bind ViewModel.NewAnswersCommand}" Name="NewButton"/>
         </StackPanel>
-        <ListView x:Name="AnswersListView" Grid.Row="0" Grid.Column="1" Grid.RowSpan="4" Background="LightGray" ItemsSource="{x:Bind ViewModel.Answers}">
+        
+        <!-- Right pane -->
+        <!-- TODO: Some static resource background color -->
+        <ListView Grid.Column="2" Grid.Row="0" Grid.RowSpan="4" x:Name="AnswersListView" Background="LightGray" ItemsSource="{x:Bind ViewModel.Answers}">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="MinHeight" Value="0"/>
