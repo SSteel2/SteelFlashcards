@@ -33,6 +33,9 @@ public partial class DictionariesViewModel : ObservableObject
     [ObservableProperty]
     private DictionaryFile? loadedDictionary;
 
+    public event EventHandler? NewDictionaryCompleted;
+    public event EventHandler? RenameDictionaryCompleted;
+
     public DictionariesViewModel(IDataService dataService, INavigationService navigationService)
     {
         _dataService = dataService;
@@ -54,6 +57,8 @@ public partial class DictionariesViewModel : ObservableObject
         var dictionaryFile = _dataService.NewDictionary(NewDictionaryName);
         if (dictionaryFile != null)
             m_dictionaryFiles.Add(dictionaryFile);
+        NewDictionaryName = string.Empty;
+        NewDictionaryCompleted?.Invoke(this, EventArgs.Empty);
     }
 
     [RelayCommand(CanExecute = nameof(IsDictionarySelected))]
@@ -63,6 +68,8 @@ public partial class DictionariesViewModel : ObservableObject
             return; // TODO: maybe some better indication of bad name
 
         _dataService.RenameDictionary(SelectedDictionary, RenameDictionaryName);
+        RenameDictionaryName = string.Empty;
+        RenameDictionaryCompleted?.Invoke(this, EventArgs.Empty);
     }
 
     [RelayCommand(CanExecute = nameof(IsDictionarySelected))]

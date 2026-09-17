@@ -1,6 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using System;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -21,15 +21,20 @@ public sealed partial class DictionariesPage : Page
         if (ViewModel == null)
             throw new ApplicationException("Dev: Missing DictionariesViewModel Service");
         InitializeComponent();
+
+        ViewModel.NewDictionaryCompleted += (_, _) => NewDictionaryFlyout.Hide();
+        ViewModel.RenameDictionaryCompleted += (_, _) => RenameDictionaryFlyout.Hide();
     }
 
-    private void NewDictionaryAcceptButton_Click(object sender, RoutedEventArgs e)
+    private void NewDictionaryBox_KeyUp(object sender, KeyRoutedEventArgs e)
     {
-        NewDictionaryFlyout.Hide();
+        if (e.Key == Windows.System.VirtualKey.Enter && ViewModel.NewDictionaryCommand.CanExecute(null))
+            ViewModel.NewDictionaryCommand.Execute(null);
     }
 
-    private void RenameDictionaryAcceptButton_Click(object sender, RoutedEventArgs e)
+    private void RenameDictionaryBox_KeyUp(object sender, KeyRoutedEventArgs e)
     {
-        RenameDictionaryFlyout.Hide();
+        if (e.Key == Windows.System.VirtualKey.Enter && ViewModel.RenameDictionaryCommand.CanExecute(null))
+            ViewModel.RenameDictionaryCommand.Execute(null);
     }
 }

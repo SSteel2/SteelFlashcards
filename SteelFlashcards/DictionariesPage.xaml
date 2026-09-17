@@ -71,8 +71,12 @@
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
                             <TextBlock Text="New Name:" VerticalAlignment="Center" Margin="0,0,12,0"/>
-                            <TextBox Grid.Column="1" HorizontalAlignment="Stretch" Text="{x:Bind ViewModel.NewDictionaryName, Mode=TwoWay}"/>
-                            <Button Content="Create Dictionary" Grid.Row="1" Grid.ColumnSpan="2" Command="{x:Bind ViewModel.NewDictionaryCommand}" Margin="0,8,0,0" HorizontalAlignment="Right" Click="NewDictionaryAcceptButton_Click"/>
+                            <TextBox Grid.Column="1" HorizontalAlignment="Stretch" Text="{x:Bind ViewModel.NewDictionaryName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" KeyUp="NewDictionaryBox_KeyUp"/>
+                            <Button Content="Create Dictionary" Grid.Row="1" Grid.ColumnSpan="2" Command="{x:Bind ViewModel.NewDictionaryCommand}" Margin="0,8,0,0" HorizontalAlignment="Right">
+                                <Button.KeyboardAccelerators>
+                                    <KeyboardAccelerator Key="Enter"/>
+                                </Button.KeyboardAccelerators>
+                            </Button>
                         </Grid>
                     </Flyout>
                 </Button.Flyout>
@@ -90,9 +94,12 @@
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
                             <TextBlock Text="New Name:" VerticalAlignment="Center" Margin="0,0,12,0"/>
-                            <TextBox Grid.Column="1" HorizontalAlignment="Stretch" Text="{x:Bind ViewModel.RenameDictionaryName, Mode=TwoWay}"/>
-                            <!--TODO: Needs keyboard accelerator-->
-                            <Button Content="Rename Dictionary" Grid.Row="1" Grid.ColumnSpan="2" Command="{x:Bind ViewModel.RenameDictionaryCommand}" Margin="0,8,0,0" HorizontalAlignment="Right" Click="RenameDictionaryAcceptButton_Click"/>
+                            <TextBox Grid.Column="1" HorizontalAlignment="Stretch" Text="{x:Bind ViewModel.RenameDictionaryName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" KeyUp="RenameDictionaryBox_KeyUp"/>
+                            <Button Content="Rename Dictionary" Grid.Row="1" Grid.ColumnSpan="2" Command="{x:Bind ViewModel.RenameDictionaryCommand}" Margin="0,8,0,0" HorizontalAlignment="Right">
+                                <Button.KeyboardAccelerators>
+                                    <KeyboardAccelerator Key="Enter"/>
+                                </Button.KeyboardAccelerators>
+                            </Button>
                         </Grid>
                     </Flyout>
                 </Button.Flyout>
