@@ -14,10 +14,7 @@ public sealed partial class DictionariesPage : Page
 
     public DictionariesPage()
     {
-        var viewModel = App.ServiceProvider?.GetService<DictionariesViewModel>();
-        if (viewModel == null)
-            throw new ApplicationException("Dev: Missing DictionariesViewModel Service");
-        ViewModel = viewModel;
+        ViewModel = (App.ServiceProvider?.GetService<DictionariesViewModel>()) ?? throw new ApplicationException("Dev: Missing DictionariesViewModel Service");
         InitializeComponent();
 
         ViewModel.NewDictionaryCompleted += (_, _) => NewDictionaryFlyout.Hide();

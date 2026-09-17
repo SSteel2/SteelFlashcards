@@ -15,11 +15,8 @@ public sealed partial class EditPage : Page
 
     public EditPage()
     {
-        var viewModel = App.ServiceProvider?.GetService<EditViewModel>();
-        if (viewModel == null)
-            throw new ApplicationException("Dev: Missing EditViewModel Service");
-        ViewModel = viewModel;
-        this.InitializeComponent();
+        ViewModel = (App.ServiceProvider?.GetService<EditViewModel>()) ?? throw new ApplicationException("Dev: Missing EditViewModel Service");
+        InitializeComponent();
     }
 
     private void EditButton_Click(object sender, RoutedEventArgs e)

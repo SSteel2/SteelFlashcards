@@ -15,11 +15,8 @@ public sealed partial class LearnPage : Page
     
     public LearnPage()
     {
-        var viewModel = App.ServiceProvider?.GetService<LearnViewModel>();
-        if (viewModel == null)
-            throw new ApplicationException("Dev: Missing MainViewModel Service");
-        ViewModel = viewModel;
-        this.InitializeComponent();
+        ViewModel = (App.ServiceProvider?.GetService<LearnViewModel>()) ?? throw new ApplicationException("Dev: Missing MainViewModel Service");
+        InitializeComponent();
     }
 
     private void GuessBox_KeyUp(object sender, KeyRoutedEventArgs e)

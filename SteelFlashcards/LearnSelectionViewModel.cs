@@ -8,8 +8,8 @@ namespace SteelFlashcards;
 
 public partial class LearnSelectionViewModel : ObservableObject
 {
-    private IDataService _dataService;
-    private INavigationService _navigationService;
+    private readonly IDataService _dataService;
+    private readonly INavigationService _navigationService;
 
     private readonly ObservableCollection<DictionaryTag> _tags;
     public ObservableCollection<DictionaryTag> Tags { get { return _tags; } }

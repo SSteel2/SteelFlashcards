@@ -14,7 +14,7 @@ public partial class App : Application
 
     public static MainWindow? MainWindow { get { return m_window; } }
 
-    public static IServiceProvider? ServiceProvider { get; private set; }
+    internal static IServiceProvider? ServiceProvider { get; private set; }
 
     /// <summary>
     /// Initializes the singleton application object. This is the first line of authored code
@@ -38,7 +38,7 @@ public partial class App : Application
         m_window.Activate();
     }
 
-    private IServiceProvider RegisterServices()
+    private ServiceProvider RegisterServices()
     {
         m_navigationService = new NavigationService();
         m_navigationService.Configure(nameof(LearnPage), typeof(LearnPage));

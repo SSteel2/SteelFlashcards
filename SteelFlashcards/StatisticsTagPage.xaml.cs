@@ -14,10 +14,7 @@ public sealed partial class StatisticsTagPage : Page
 
     public StatisticsTagPage()
     {
-        var viewModel = App.ServiceProvider?.GetService<StatisticsTagViewModel>();
-        if (viewModel == null)
-            throw new ApplicationException("Dev: Missing StatisticsTagViewModel Service");
-        ViewModel = viewModel;
+        ViewModel = (App.ServiceProvider?.GetService<StatisticsTagViewModel>()) ?? throw new ApplicationException("Dev: Missing StatisticsTagViewModel Service");
         InitializeComponent();
     }
 

@@ -13,7 +13,7 @@ internal class Teacher
     private readonly List<WordEntry> m_words;
     private readonly Statistics m_statistics;
     private Dictionary<WordMasteryLevel, List<WordEntry>> m_wordPools;
-    private Queue<WordEntry> m_bannedWords = new();
+    private readonly Queue<WordEntry> m_bannedWords = new();
     private int m_maxBannedWords;
     private WordMasteryLevel m_lastPool = WordMasteryLevel.Zero;
 

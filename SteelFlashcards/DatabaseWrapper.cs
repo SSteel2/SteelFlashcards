@@ -4,29 +4,21 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace SteelFlashcards;
 
-public class WordEntry
+public class WordEntry(string word, List<string> meanings, List<string> tags)
 {
     [JsonPropertyName("word")]
-    public string Word { get; set; }
-    
+    public string Word { get; set; } = word;
+
     [JsonPropertyName("meanings")]
-    public List<string> Meanings { get; set; }
-    
+    public List<string> Meanings { get; set; } = meanings;
+
     [JsonPropertyName("tags")]
-    public List<string> Tags { get; set; }
+    public List<string> Tags { get; set; } = tags;
 
     [JsonIgnore]
-    public int LocalId { get; }
+    public int LocalId { get; } = s_currentId++;
 
     private static int s_currentId = 0;
-
-    public WordEntry(string word, List<string> meanings, List<string> tags)
-    {
-        Word = word;
-        Meanings = meanings;
-        Tags = tags;
-        LocalId = s_currentId++;
-    }
 
     public string GetMeaningsString()
     {
@@ -48,18 +40,12 @@ public class WordEntry
     }
 }
 
-public class DictionaryEntry
+public class DictionaryEntry(string name, List<WordEntry> wordEntries)
 {
     [JsonPropertyName("name")]
-    public string Name { get; set; }
+    public string Name { get; set; } = name;
     [JsonPropertyName("words")]
-    public List<WordEntry> WordEntries { get; set; }
-
-    public DictionaryEntry(string name, List<WordEntry> wordEntries)
-    {
-        Name = name;
-        WordEntries = wordEntries;
-    }
+    public List<WordEntry> WordEntries { get; set; } = wordEntries;
 }
 
 public partial class DictionaryFile : ObservableObject
@@ -69,18 +55,18 @@ public partial class DictionaryFile : ObservableObject
     public DictionaryEntry Content { get; set; }
 
     [ObservableProperty]
-    private bool isLoaded;
+    public partial bool IsLoaded { get; set; }
 
     [ObservableProperty]
-    private string dictionaryName;
+    public partial string DictionaryName { get; set; }
 
     [ObservableProperty]
-    private bool isPristine;
+    public partial bool IsPristine { get; set; }
 
     public DictionaryFile(DictionaryEntry content)
     {
         Content = content;
-        dictionaryName = content.Name;
+        DictionaryName = content.Name;
         IsPristine = true;
         HashSet<string> duplicateCheck = [];
         foreach (var entry in Content.WordEntries)

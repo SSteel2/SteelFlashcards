@@ -10,7 +10,7 @@ namespace SteelFlashcards;
 /// </summary>
 public sealed partial class MainWindow : Window
 {
-    private INavigationService _navigationService;
+    private readonly INavigationService _navigationService;
 
     public MainWindow(INavigationService navigationService)
     {

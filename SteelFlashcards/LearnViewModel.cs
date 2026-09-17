@@ -12,14 +12,14 @@ namespace SteelFlashcards;
 
 public partial class LearnViewModel : ObservableObject
 {
-    private IDataService _dataService;
-    private INavigationService _navigationService;
+    private readonly IDataService _dataService;
+    private readonly INavigationService _navigationService;
 
-    [ObservableProperty] private string? currentWord;
-    [ObservableProperty] [NotifyPropertyChangedFor(nameof(AllWordsMastered))] private int? wordCount;
-    [ObservableProperty] [NotifyPropertyChangedFor(nameof(AllWordsMastered))] private int? masteryCount;
+    [ObservableProperty] public partial string? CurrentWord { get; set; }
+    [ObservableProperty] [NotifyPropertyChangedFor(nameof(AllWordsMastered))] public partial int? WordCount { get; set; }
+    [ObservableProperty] [NotifyPropertyChangedFor(nameof(AllWordsMastered))] public partial int? MasteryCount { get; set; }
     public bool AllWordsMastered => WordCount is int count && count > 0 && MasteryCount == count;
-    [ObservableProperty] private LearnPageAnswer? lastAnswer;
+    [ObservableProperty] public partial LearnPageAnswer? LastAnswer { get; set; }
 
     private readonly ObservableCollection<LearnPageAnswer> answers = [];
     public ObservableCollection<LearnPageAnswer> Answers { get { return answers; } }
@@ -183,7 +183,7 @@ public partial class LearnViewModel : ObservableObject
     }
 }
 
-public class BoolToIconConverter : IValueConverter
+public partial class BoolToIconConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, string language)
     {

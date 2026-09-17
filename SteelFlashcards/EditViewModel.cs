@@ -8,27 +8,27 @@ namespace SteelFlashcards;
 
 public partial class EditViewModel : ObservableObject
 {
-    private IDataService _dataService;
-    private INavigationService _navigationService;
+    private readonly IDataService _dataService;
+    private readonly INavigationService _navigationService;
 
-    private ObservableCollection<WordEntry> _wordEntries;
+    private readonly ObservableCollection<WordEntry> _wordEntries;
     public ObservableCollection<WordEntry> WordEntries { get { return _wordEntries; } }
 
     private WordEntry? m_currentEditWord;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(AcceptWordEntryCommand))]
-    private string newWordText = string.Empty;
+    public partial string NewWordText { get; set; } = string.Empty;
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(AcceptWordEntryCommand))]
-    private string newMeaningText = string.Empty;
+    public partial string NewMeaningText { get; set; } = string.Empty;
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(AcceptWordEntryCommand))]
-    private string newTagsText = string.Empty;
+    public partial string NewTagsText { get; set; } = string.Empty;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
-    private bool isDirty = false;
+    public partial bool IsDirty { get; set; } = false;
 
     private string m_lastUsedTags = string.Empty;
 

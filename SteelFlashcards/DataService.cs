@@ -37,11 +37,11 @@ public class DataService : IDataService
     List<WordEntry> _words = [];
 
     List<Answer> _answers = [];
-    List<Answer> _answersBuffer = [];
+    readonly List<Answer> _answersBuffer = [];
     bool m_isAnswersLoaded = false;
-    List<DictionaryTag> m_activeTags = [];
+    readonly List<DictionaryTag> m_activeTags = [];
 
-    List<DictionaryFile> m_dictionaryFiles = [];
+    readonly List<DictionaryFile> m_dictionaryFiles = [];
     DictionaryFile? m_loadedDictionary = null;
 
     Statistics m_statistics = new();
@@ -263,8 +263,7 @@ public class DataService : IDataService
 
     public void LoadDictionary(DictionaryFile dictionary)
     {
-        if (m_loadedDictionary != null)
-            m_loadedDictionary.IsLoaded = false;
+        m_loadedDictionary?.IsLoaded = false;
         m_loadedDictionary = dictionary;
         m_loadedDictionary.IsLoaded = true;
         UserConfiguration.LastUsedDictionary = m_loadedDictionary.DictionaryName;
@@ -301,9 +300,9 @@ public class DataService : IDataService
 
     public TagStatistic? GetTagStatistic(string tagName)
     {
-        if (!m_statistics.tags.ContainsKey(tagName))
+        if (!m_statistics.tags.TryGetValue(tagName, out TagStatistic? value))
             return null; // TODO: should not happen, needs proper error handling?
-        return m_statistics.tags[tagName];
+        return value;
     }
 
     private void ReadDictionaries()
@@ -359,7 +358,7 @@ public class DataService : IDataService
         File.WriteAllText(dictionaryFile.FileName, jsonString);
     }
 
-    private void CopyTemplateDictionary()
+    private static void CopyTemplateDictionary()
     {
         string fileName = "template_dict.json";
         string fullPath = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)!, "Assets", fileName);

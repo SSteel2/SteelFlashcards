@@ -11,27 +11,27 @@ namespace SteelFlashcards;
 
 public partial class DictionariesViewModel : ObservableObject
 {
-    private IDataService _dataService;
-    private INavigationService _navigationService;
+    private readonly IDataService _dataService;
+    private readonly INavigationService _navigationService;
 
-    private ObservableCollection<DictionaryFile> m_dictionaryFiles;
+    private readonly ObservableCollection<DictionaryFile> m_dictionaryFiles;
     public ObservableCollection<DictionaryFile> DictionaryFiles { get { return m_dictionaryFiles; } }
 
     [ObservableProperty]
-    private string? newDictionaryName;
+    public partial string? NewDictionaryName { get; set; }
 
     [ObservableProperty]
-    private string? renameDictionaryName;
+    public partial string? RenameDictionaryName { get; set; }
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(RenameDictionaryCommand))]
     [NotifyCanExecuteChangedFor(nameof(DeleteDictionaryCommand))]
     [NotifyCanExecuteChangedFor(nameof(ExportDictionaryCommand))]
     [NotifyCanExecuteChangedFor(nameof(LoadDictionaryCommand))]
-    private DictionaryFile? selectedDictionary;
+    public partial DictionaryFile? SelectedDictionary { get; set; }
 
     [ObservableProperty]
-    private DictionaryFile? loadedDictionary;
+    public partial DictionaryFile? LoadedDictionary { get; set; }
 
     public event EventHandler? NewDictionaryCompleted;
     public event EventHandler? RenameDictionaryCompleted;
@@ -90,7 +90,7 @@ public partial class DictionariesViewModel : ObservableObject
         FileSavePicker savePicker = new();
         var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(App.MainWindow);
         WinRT.Interop.InitializeWithWindow.Initialize(savePicker, hWnd);
-        savePicker.FileTypeChoices.Add("JSON Dictionary", new List<string> { ".json" });
+        savePicker.FileTypeChoices.Add("JSON Dictionary", [".json"]);
         // TODO: check what happens with illeagal characters
         savePicker.SuggestedFileName = SelectedDictionary.Content.Name;
         StorageFile file = await savePicker.PickSaveFileAsync();

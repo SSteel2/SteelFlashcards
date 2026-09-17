@@ -185,12 +185,12 @@ public class Statistics
     int wordsMastered = 0;
     int wordsTotal = 0;
     public Dictionary<string, TagStatistic> tags = [];
-    Dictionary<string, WordStatistic> words = [];
+    private readonly Dictionary<string, WordStatistic> words = [];
 
     // AddWord
     public void AddWord(WordEntry word)
     {
-        WordStatistic wordStatistic = new WordStatistic(word.Word);
+        WordStatistic wordStatistic = new(word.Word);
         // TODO: What happens if word already exists. For simplicity and not caring about degenerate cases right now
         // lets ignore duplicates
         if (words.ContainsKey(word.Word))
@@ -203,12 +203,14 @@ public class Statistics
         wordsTotal++;
         foreach (var tag in word.Tags)
         {
-            if (!tags.ContainsKey(tag))
+            if (!tags.TryGetValue(tag, out TagStatistic? value))
             {
-                tags.Add(tag, new TagStatistic(tag));
+                value = new TagStatistic(tag);
+                tags.Add(tag, value);
                 tagsTotal++;
             }
-            tags[tag].LinkWordStatistic(wordStatistic);
+
+            value.LinkWordStatistic(wordStatistic);
         }
     }
 
@@ -216,10 +218,9 @@ public class Statistics
     public void AddAnswer(Answer answer)
     {
         // There might be deleted words in word entries with previous Answers
-        if (!words.ContainsKey(answer.Word))
+        if (!words.TryGetValue(answer.Word, out WordStatistic? value))
             return;
-
-        words[answer.Word].AddAnswer(answer);
+        value.AddAnswer(answer);
     }
 
     // Calculates mastery when all words are added
@@ -264,22 +265,16 @@ public class Statistics
 
 public partial class StatisticsViewModel : ObservableObject
 {
-    private IDataService _dataService;
-    private INavigationService _navigationService;
+    private readonly IDataService _dataService;
+    private readonly INavigationService _navigationService;
 
     private Statistics m_statistics;
 
-    [ObservableProperty]
-    private string loadedDictionaryName;
-    [ObservableProperty]
-    private string masteredTagsString = "";
-    [ObservableProperty]
-    private string masteredWordsString = "";
-    [ObservableProperty]
-    private ObservableCollection<TagStatistic> tagStatistics = [];
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(ViewTagCommand))]
-    private TagStatistic? selectedTag;
+    [ObservableProperty] public partial string LoadedDictionaryName { get; set; } = string.Empty;
+    [ObservableProperty] public partial string MasteredTagsString { get; set; } = string.Empty;
+    [ObservableProperty] public partial string MasteredWordsString { get; set; } = string.Empty;
+    [ObservableProperty] public partial ObservableCollection<TagStatistic> TagStatistics { get; set; } = new ObservableCollection<TagStatistic>();
+    [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(ViewTagCommand))] public partial TagStatistic? SelectedTag { get; set; }
 
     public StatisticsViewModel(IDataService dataService, INavigationService navigationService)
     {

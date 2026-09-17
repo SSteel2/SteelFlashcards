@@ -14,10 +14,7 @@ public sealed partial class LearnSelectionPage : Page
     
     public LearnSelectionPage()
     {
-        var viewModel = App.ServiceProvider?.GetService<LearnSelectionViewModel>();
-        if (viewModel == null)
-            throw new ApplicationException("Dev: Missing LearnSelectionViewModel Service");
-        ViewModel = viewModel;
+        ViewModel = (App.ServiceProvider?.GetService<LearnSelectionViewModel>()) ?? throw new ApplicationException("Dev: Missing LearnSelectionViewModel Service");
         InitializeComponent();
     }
 

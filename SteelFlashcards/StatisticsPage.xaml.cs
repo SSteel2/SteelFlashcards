@@ -13,10 +13,7 @@ public sealed partial class StatisticsPage : Page
     
     public StatisticsPage()
     {
-        var viewModel = App.ServiceProvider?.GetService<StatisticsViewModel>();
-        if (viewModel == null)
-            throw new ApplicationException("Dev: Missing StatisticsViewModel Service");
-        ViewModel = viewModel;
+        ViewModel = (App.ServiceProvider?.GetService<StatisticsViewModel>()) ?? throw new ApplicationException("Dev: Missing StatisticsViewModel Service");
         InitializeComponent();
     }
 }

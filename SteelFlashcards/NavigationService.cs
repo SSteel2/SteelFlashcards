@@ -17,7 +17,7 @@ public interface INavigationService
 
 public class NavigationService : INavigationService
 {
-    private readonly IDictionary<string, Type> m_pages = new ConcurrentDictionary<string, Type>();
+    private readonly ConcurrentDictionary<string, Type> m_pages = new();
 
     private Frame? MainFrame;
 
@@ -54,10 +54,10 @@ public class NavigationService : INavigationService
 
     public void NavigateTo(string page, object? parameter)
     {
-        if (!m_pages.ContainsKey(page))
+        if (!m_pages.TryGetValue(page, out Type? value))
         {
             throw new ArgumentException($"Page '{page}' not found");
         }
-        MainFrame?.Navigate(m_pages[page], parameter);
+        MainFrame?.Navigate(value, parameter);
     }
 }
