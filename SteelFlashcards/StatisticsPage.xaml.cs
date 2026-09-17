@@ -2,9 +2,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using System;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
-
 namespace SteelFlashcards;
 
 /// <summary>
@@ -16,9 +13,10 @@ public sealed partial class StatisticsPage : Page
     
     public StatisticsPage()
     {
-        ViewModel = App.ServiceProvider.GetService<StatisticsViewModel>();
-        if (ViewModel == null)
+        var viewModel = App.ServiceProvider?.GetService<StatisticsViewModel>();
+        if (viewModel == null)
             throw new ApplicationException("Dev: Missing StatisticsViewModel Service");
+        ViewModel = viewModel;
         InitializeComponent();
     }
 }

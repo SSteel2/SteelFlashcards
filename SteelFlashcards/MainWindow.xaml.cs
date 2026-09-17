@@ -3,9 +3,6 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
-
 namespace SteelFlashcards;
 
 /// <summary>
@@ -25,9 +22,9 @@ public sealed partial class MainWindow : Window
     private void NavigationView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
     {
         var navigationViewItem = args.SelectedItem as NavigationViewItem;
-        if (navigationViewItem != null)
+        if (navigationViewItem != null && navigationViewItem.Tag is string tag)
         {
-            _navigationService.NavigateTo(navigationViewItem.Tag as string);
+            _navigationService.NavigateTo(tag);
             NavigationViewBar.Header = navigationViewItem.Content;
         }
     }

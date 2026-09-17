@@ -3,9 +3,6 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
-
 namespace SteelFlashcards;
 
 /// <summary>
@@ -17,9 +14,10 @@ public sealed partial class LearnSelectionPage : Page
     
     public LearnSelectionPage()
     {
-        ViewModel = App.ServiceProvider.GetService<LearnSelectionViewModel>();
-        if (ViewModel == null)
+        var viewModel = App.ServiceProvider?.GetService<LearnSelectionViewModel>();
+        if (viewModel == null)
             throw new ApplicationException("Dev: Missing LearnSelectionViewModel Service");
+        ViewModel = viewModel;
         InitializeComponent();
     }
 

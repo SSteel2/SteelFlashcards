@@ -4,9 +4,6 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.Extensions.DependencyInjection;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
-
 namespace SteelFlashcards;
 
 /// <summary>
@@ -18,9 +15,10 @@ public sealed partial class EditPage : Page
 
     public EditPage()
     {
-        ViewModel = App.ServiceProvider.GetService<EditViewModel>();
-        if (ViewModel == null)
+        var viewModel = App.ServiceProvider?.GetService<EditViewModel>();
+        if (viewModel == null)
             throw new ApplicationException("Dev: Missing EditViewModel Service");
+        ViewModel = viewModel;
         this.InitializeComponent();
     }
 

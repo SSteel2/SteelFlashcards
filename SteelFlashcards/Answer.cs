@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SteelFlashcards;
 
 public class Answer
 {
-    public string Word { get; set; }
-    public string Guess { get; set; }
+    public required string Word { get; set; }
+    public required string Guess { get; set; }
     public bool IsCorrect { get; set; }
     public DateTimeOffset AttemptDateTime { get; set; }
 }
@@ -17,9 +18,11 @@ public class LearnPageAnswer : Answer
 
     private static int s_lastOrder = 0;
 
+    [SetsRequiredMembers]
     public LearnPageAnswer(string word, string correctAnswer, string guess) 
         : this(word, correctAnswer, guess, correctAnswer == guess) { }
 
+    [SetsRequiredMembers]
     public LearnPageAnswer(string word, string correctAnswer, string guess, bool isCorrect)
     {
         Order = ++s_lastOrder;

@@ -10,9 +10,7 @@ public partial class StatisticsTagViewModel : ObservableObject
     private INavigationService _navigationService;
 
     [ObservableProperty]
-    private TagStatistic selectedTag;
-    //[ObservableProperty]
-    //private string masteredWordsString;
+    private TagStatistic? selectedTag;
 
     public StatisticsTagViewModel(IDataService dataService, INavigationService navigationService)
     {
@@ -24,11 +22,10 @@ public partial class StatisticsTagViewModel : ObservableObject
     {
         if (tagName == null)
             throw new ApplicationException("Dev: TagName is null in InitializeTagStatistic");
-        SelectedTag = _dataService.GetTagStatistic(tagName);
-        if (SelectedTag == null)
+        var selectedTag = _dataService.GetTagStatistic(tagName);
+        if (selectedTag == null)
             throw new ApplicationException("Dev: _dataService.GetTagStatistic(TagName) returned null in InitializeTagStatistic");
-
-        //MasteredWordsString = SelectedTag.GetWordsMasteryString();
+        SelectedTag = selectedTag;
     }
 
     [RelayCommand]

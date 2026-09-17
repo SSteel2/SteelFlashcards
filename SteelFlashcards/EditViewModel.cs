@@ -18,13 +18,13 @@ public partial class EditViewModel : ObservableObject
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(AcceptWordEntryCommand))]
-    private string? newWordText;
+    private string newWordText = string.Empty;
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(AcceptWordEntryCommand))]
-    private string? newMeaningText;
+    private string newMeaningText = string.Empty;
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(AcceptWordEntryCommand))]
-    private string? newTagsText;
+    private string newTagsText = string.Empty;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand))]

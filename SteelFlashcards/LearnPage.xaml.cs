@@ -4,9 +4,6 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using System;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
-
 namespace SteelFlashcards;
 
 /// <summary>
@@ -14,15 +11,16 @@ namespace SteelFlashcards;
 /// </summary>
 public sealed partial class LearnPage : Page
 {
+    public LearnViewModel ViewModel;
+    
     public LearnPage()
     {
-        ViewModel = App.ServiceProvider.GetService<LearnViewModel>();
-        if (ViewModel == null)
+        var viewModel = App.ServiceProvider?.GetService<LearnViewModel>();
+        if (viewModel == null)
             throw new ApplicationException("Dev: Missing MainViewModel Service");
+        ViewModel = viewModel;
         this.InitializeComponent();
     }
-
-    public LearnViewModel ViewModel;
 
     private void GuessBox_KeyUp(object sender, KeyRoutedEventArgs e)
     {

@@ -9,7 +9,6 @@ namespace SteelFlashcards;
 
 public interface INavigationService
 {
-    //string CurrentPage { get; }
     void NavigateTo(string page);
     void NavigateTo(string page, object parameter);
     void GoBack();
@@ -18,16 +17,9 @@ public interface INavigationService
 
 public class NavigationService : INavigationService
 {
-    private readonly IDictionary<string, Type> _pages = new ConcurrentDictionary<string, Type>();
+    private readonly IDictionary<string, Type> m_pages = new ConcurrentDictionary<string, Type>();
 
-    private Frame MainFrame;
-
-    //public string CurrentPage => throw new NotImplementedException();
-
-    public NavigationService(Frame frame)
-    {
-        MainFrame = frame;
-    }
+    private Frame? MainFrame;
 
     public NavigationService()
     {
@@ -35,21 +27,21 @@ public class NavigationService : INavigationService
 
     public void SetMainFrame(Frame mainFrame)
     {
-        this.MainFrame = mainFrame;
+        MainFrame = mainFrame;
     }
 
     public void Configure(string page, Type type)
     {
-        if (_pages.Values.Any(v => v == type))
+        if (m_pages.Values.Any(v => v == type))
         {
             throw new ArgumentException($"{type.Name} is already registered");
         }
-        _pages[page] = type;
+        m_pages[page] = type;
     }
 
     public void GoBack()
     {
-        if (MainFrame.CanGoBack)
+        if (MainFrame?.CanGoBack == true)
         {
             MainFrame.GoBack();
         }
@@ -62,10 +54,10 @@ public class NavigationService : INavigationService
 
     public void NavigateTo(string page, object? parameter)
     {
-        if (!_pages.ContainsKey(page))
+        if (!m_pages.ContainsKey(page))
         {
             throw new ArgumentException($"Page '{page}' not found");
         }
-        MainFrame.Navigate(_pages[page], parameter);
+        MainFrame?.Navigate(m_pages[page], parameter);
     }
 }
