@@ -23,6 +23,8 @@ public partial class LearnViewModel : ObservableObject
 
     private readonly ObservableCollection<LearnPageAnswer> answers = [];
     public ObservableCollection<LearnPageAnswer> Answers { get { return answers; } }
+    private readonly ObservableCollection<DictionaryTag> tags = [];
+    public ObservableCollection<DictionaryTag> Tags { get { return tags; } }
 
     private readonly List<WordEntry> m_words = [];
     private WordEntry? m_currentWordEntry;
@@ -93,6 +95,10 @@ public partial class LearnViewModel : ObservableObject
     {
         IList<WordEntry> dictionaryWords = _dataService.GetWords();
         IList<DictionaryTag> activeTags = _dataService.GetActiveTags();
+        tags.Clear();
+        foreach (var tag in activeTags)
+            tags.Add(tag);
+        m_words.Clear();
         foreach (WordEntry wordEntry in dictionaryWords)
             if (wordEntry.Tags.Intersect(activeTags.Select(x => x.TagName)).Any())
                 m_words.Add(wordEntry);
