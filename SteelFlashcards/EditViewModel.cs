@@ -95,6 +95,7 @@ public partial class EditViewModel : ObservableObject
             ClearEditFields();
         }
         _wordEntries.Remove(word);
+        _dataService.RemoveWordEntry(word);
         IsDirty = true;
     }
 
