@@ -46,4 +46,9 @@ public sealed partial class EditPage : Page
             WordsListView.ScrollIntoView(changedWordEntry);
         }
     }
+
+    private void NewTags_GotFocus(object sender, RoutedEventArgs e)
+    {
+        ViewModel.FillLastUsedTags();
+    }
 }

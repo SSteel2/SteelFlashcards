@@ -30,6 +30,8 @@ public partial class EditViewModel : ObservableObject
     [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
     private bool isDirty = false;
 
+    private string m_lastUsedTags = string.Empty;
+
     public EditViewModel(IDataService dataService, INavigationService navigationService)
     {
         _dataService = dataService;
@@ -54,6 +56,7 @@ public partial class EditViewModel : ObservableObject
             _dataService.AddWordEntry(wordEntry);
             _wordEntries.Add(wordEntry);
             changedWordEntry = wordEntry;
+            m_lastUsedTags = NewTagsText;
         }
         else
         {
@@ -123,5 +126,13 @@ public partial class EditViewModel : ObservableObject
     private bool CanExecuteSave()
     {
         return IsDirty;
+    }
+
+    public void FillLastUsedTags()
+    {
+        if (m_currentEditWord == null && string.IsNullOrWhiteSpace(NewTagsText) && !string.IsNullOrWhiteSpace(m_lastUsedTags))
+        {
+            NewTagsText = m_lastUsedTags;
+        }
     }
 }
