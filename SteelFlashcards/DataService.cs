@@ -36,9 +36,9 @@ public class DataService : IDataService
 {
     List<WordEntry> _words = [];
 
-    List<Answer> _answers;
-    List<Answer> _answersBuffer;
-    bool m_isAnswersLoaded;
+    List<Answer> _answers = [];
+    List<Answer> _answersBuffer = [];
+    bool m_isAnswersLoaded = false;
     List<DictionaryTag> m_activeTags = [];
 
     List<DictionaryFile> m_dictionaryFiles = [];
@@ -61,10 +61,6 @@ public class DataService : IDataService
         }
 
         LoadDictionary(GetLastUsedDictionaryFile());
-
-        _answers = [];
-        _answersBuffer = [];
-        m_isAnswersLoaded = false;
     }
 
     public void Save()

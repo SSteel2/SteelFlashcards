@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace SteelFlashcards;
 
@@ -23,7 +24,7 @@ public partial class LearnSelectionViewModel : ObservableObject
         InitializeTags();
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(CanStart))]
     private void AcceptNavigate()
     {
         if (SelectedTags.Count == 0)
@@ -37,6 +38,8 @@ public partial class LearnSelectionViewModel : ObservableObject
         _navigationService.NavigateTo(nameof(LearnPage));
     }
 
+    private bool CanStart => _tags.Any(tag => tag.WordCount > 0);
+
     private void InitializeTags()
     {
         DictionaryFile? loadedDictionary = _dataService.GetLoadedDictionary();
@@ -47,5 +50,6 @@ public partial class LearnSelectionViewModel : ObservableObject
         {
             Tags.Add(tag);
         }
+        AcceptNavigateCommand.NotifyCanExecuteChanged();
     }
 }
