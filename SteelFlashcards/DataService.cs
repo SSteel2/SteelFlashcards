@@ -190,6 +190,7 @@ public class DataService : IDataService
     public void AddWordEntry(WordEntry wordEntry)
     {
         _words.Add(wordEntry);
+        m_statistics.AddWord(wordEntry);
     }
 
     public void RemoveWordEntry(WordEntry wordEntry)
