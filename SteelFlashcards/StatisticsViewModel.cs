@@ -203,14 +203,14 @@ public class Statistics
         wordsTotal++;
         foreach (var tag in word.Tags)
         {
-            if (!tags.TryGetValue(tag, out TagStatistic? value))
+            if (!tags.TryGetValue(tag, out TagStatistic? tagStatistic))
             {
-                value = new TagStatistic(tag);
-                tags.Add(tag, value);
+                tagStatistic = new TagStatistic(tag);
+                tags.Add(tag, tagStatistic);
                 tagsTotal++;
             }
 
-            value.LinkWordStatistic(wordStatistic);
+            tagStatistic.LinkWordStatistic(wordStatistic);
         }
     }
 

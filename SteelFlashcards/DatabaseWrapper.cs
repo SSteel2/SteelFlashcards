@@ -6,19 +6,12 @@ namespace SteelFlashcards;
 
 public class WordEntry(string word, List<string> meanings, List<string> tags)
 {
-    [JsonPropertyName("word")]
-    public string Word { get; set; } = word;
-
-    [JsonPropertyName("meanings")]
-    public List<string> Meanings { get; set; } = meanings;
-
-    [JsonPropertyName("tags")]
-    public List<string> Tags { get; set; } = tags;
-
-    [JsonIgnore]
-    public int LocalId { get; } = s_currentId++;
+    [JsonPropertyName("word")] public string Word { get; set; } = word;
+    [JsonPropertyName("meanings")] public List<string> Meanings { get; set; } = meanings;
+    [JsonPropertyName("tags")] public List<string> Tags { get; set; } = tags;
 
     private static int s_currentId = 0;
+    [JsonIgnore] public int LocalId { get; } = s_currentId++;
 
     public string GetMeaningsString()
     {
@@ -51,17 +44,14 @@ public class DictionaryEntry(string name, List<WordEntry> wordEntries)
 public partial class DictionaryFile : ObservableObject
 {
     public required string FileName { get; set; }
-
     public DictionaryEntry Content { get; set; }
 
-    [ObservableProperty]
-    public partial bool IsLoaded { get; set; }
+    [ObservableProperty] public partial bool IsLoaded { get; set; }
+    [ObservableProperty] public partial string DictionaryName { get; set; }
+    [ObservableProperty] public partial bool IsPristine { get; set; }
 
-    [ObservableProperty]
-    public partial string DictionaryName { get; set; }
-
-    [ObservableProperty]
-    public partial bool IsPristine { get; set; }
+    public int WordCount { get { return Content.WordEntries.Count; } }
+    public int TagCount { get { return GetTagCount(); } }
 
     public DictionaryFile(DictionaryEntry content)
     {
@@ -76,19 +66,6 @@ public partial class DictionaryFile : ObservableObject
                 IsPristine = false;
                 break;
             }
-        }
-    }
-
-    public int WordCount { get { return Content.WordEntries.Count; } }
-
-    private int m_tagCount = -1;
-    public int TagCount
-    {
-        get
-        {
-            if (m_tagCount == -1)
-                m_tagCount = GetTagCount();
-            return m_tagCount;
         }
     }
 
