@@ -46,7 +46,7 @@ public partial class EditViewModel : ObservableObject
         AcceptWordEntryInternal();
     }
 
-    // looks a little bit silly when I call the public function "internal"
+    // TODO: looks a little bit silly when I call the public function "internal"
     public WordEntry AcceptWordEntryInternal()
     {
         WordEntry changedWordEntry;

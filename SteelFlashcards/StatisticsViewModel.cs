@@ -33,6 +33,9 @@ public class WordStatistic(string word)
     // TODO: proper access modifiers, once I figure out the classes
     private bool? m_isMastered;
 
+    // Raised when an answer is added and the word's mastery state may have changed.
+    public event EventHandler? AnswerAdded;
+
     private int m_correctAttempts = 0;
     private int m_recentAttempts = 0;
     private int m_recentCorrectAttempts = 0;
@@ -49,6 +52,8 @@ public class WordStatistic(string word)
                 m_recentCorrectAttempts++;
         }
         m_isMastered = null;
+
+        AnswerAdded?.Invoke(this, EventArgs.Empty);
     }
 
     public bool IsMastered
@@ -137,12 +142,13 @@ public class WordStatistic(string word)
     }
 }
 
-public class TagStatistic(string tagName)
+public partial class TagStatistic(string tagName) : IDisposable
 {
     public string TagName = tagName;
     public List<WordStatistic> Words = [];
-    
+
     private int? m_wordsMastered;
+    private bool m_disposed;
 
     public int WordsMastered
     {
@@ -152,6 +158,7 @@ public class TagStatistic(string tagName)
             return m_wordsMastered.Value;
         }
     }
+
     private int CountMasteredWords()
     {
         int wordsMastered = 0;
@@ -166,6 +173,12 @@ public class TagStatistic(string tagName)
     public void LinkWordStatistic(WordStatistic wordStatistic)
     {
         Words.Add(wordStatistic);
+        wordStatistic.AnswerAdded += OnWordAnswerAdded;
+    }
+
+    private void OnWordAnswerAdded(object? sender, EventArgs e)
+    {
+        m_wordsMastered = null;
     }
 
     public bool IsMastered { get { return Words.Count == WordsMastered; } }
@@ -174,11 +187,23 @@ public class TagStatistic(string tagName)
     {
         return "Mastery: " + Statistics.GetFractionString(WordsMastered, Words.Count);
     }
+
+    public void Dispose()
+    {
+        if (m_disposed)
+            return;
+
+        foreach (WordStatistic word in Words)
+            word.AnswerAdded -= OnWordAnswerAdded;
+
+        m_disposed = true;
+        GC.SuppressFinalize(this);
+    }
 }
 
 // View model class representing statistics calculated on the fly
 // TODO: All 3 statistics classes should be seperated from ViewModel logic
-public class Statistics
+public partial class Statistics : IDisposable
 {
     int tagsMastered = 0;
     int tagsTotal = 0;
@@ -191,8 +216,7 @@ public class Statistics
     public void AddWord(WordEntry word)
     {
         WordStatistic wordStatistic = new(word.Word);
-        // TODO: What happens if word already exists. For simplicity and not caring about degenerate cases right now
-        // lets ignore duplicates
+        // TODO: What happens if word already exists. For simplicity and not caring about degenerate cases right now lets ignore duplicates
         if (words.ContainsKey(word.Word))
         {
             // Maybe some warning for leter
@@ -260,6 +284,14 @@ public class Statistics
     public static string GetFractionString(int completed, int total)
     {
         return completed.ToString() + " / " + total.ToString();
+    }
+
+    public void Dispose()
+    {
+        foreach (var tag in tags.Values)
+            tag.Dispose();
+        tags.Clear();
+        GC.SuppressFinalize(this);
     }
 }
 

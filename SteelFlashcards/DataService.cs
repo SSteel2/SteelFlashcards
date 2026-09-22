@@ -274,6 +274,7 @@ public class DataService : IDataService
         // Probably best to load it together with app startup
 
         // Invalidate existing statistics
+        m_statistics?.Dispose();
         m_statistics = new();
 
         LoadAnswers2();
