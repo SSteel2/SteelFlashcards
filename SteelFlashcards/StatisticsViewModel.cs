@@ -176,6 +176,15 @@ public partial class TagStatistic(string tagName) : IDisposable
         wordStatistic.AnswerAdded += OnWordAnswerAdded;
     }
 
+    public void UnlinkWordStatistic(WordStatistic wordStatistic)
+    {
+        if (Words.Remove(wordStatistic))
+        {
+            wordStatistic.AnswerAdded -= OnWordAnswerAdded;
+            m_wordsMastered = null;
+        }
+    }
+
     private void OnWordAnswerAdded(object? sender, EventArgs e)
     {
         m_wordsMastered = null;
@@ -292,6 +301,61 @@ public partial class Statistics : IDisposable
             tag.Dispose();
         tags.Clear();
         GC.SuppressFinalize(this);
+    }
+
+    public void RenameWord(string oldWord, WordEntry newEntry)
+    {
+        if (!words.TryGetValue(oldWord, out WordStatistic? wordStatistic))
+            return;
+
+        if (oldWord != newEntry.Word)
+        {
+            // TODO: handle collision if newEntry.Word already exists
+            words.Remove(oldWord);
+            wordStatistic.Word = newEntry.Word;
+            words[newEntry.Word] = wordStatistic;
+        }
+
+        ReconcileTags(wordStatistic, newEntry.Tags);
+    }
+
+    private void ReconcileTags(WordStatistic wordStatistic, List<string> newTags)
+    {
+        var desired = new HashSet<string>(newTags);
+
+        var current = new HashSet<string>();
+        foreach (var tag in tags.Values)
+            if (tag.Words.Contains(wordStatistic))
+                current.Add(tag.TagName);
+
+        var removedTags = new HashSet<string>(current);
+        removedTags.ExceptWith(desired);
+
+        var addedTags = new HashSet<string>(desired);
+        addedTags.ExceptWith(current);
+
+        foreach (var tagName in removedTags)
+        {
+            TagStatistic tag = tags[tagName];
+            tag.UnlinkWordStatistic(wordStatistic);
+            if (tag.Words.Count == 0)
+            {
+                tag.Dispose();
+                tags.Remove(tagName);
+                tagsTotal--;
+            }
+        }
+
+        foreach (var tagName in addedTags)
+        {
+            if (!tags.TryGetValue(tagName, out TagStatistic? tag))
+            {
+                tag = new TagStatistic(tagName);
+                tags.Add(tagName, tag);
+                tagsTotal++;
+            }
+            tag.LinkWordStatistic(wordStatistic);
+        }
     }
 }
 

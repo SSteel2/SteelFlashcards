@@ -13,6 +13,7 @@ public interface IDataService
     IList<DictionaryTag> GetActiveTags();
     void SetActiveTags(IList<DictionaryTag> tags);
     void AddWordEntry(WordEntry wordEntry);
+    void RenameWordEntry(string oldWordKey, WordEntry wordEntry);
     void RemoveWordEntry(WordEntry wordEntry);
     IList<Answer> GetAnswers();
     void AddAnswer(LearnPageAnswer answer);
@@ -136,11 +137,8 @@ public class DataService : IDataService
         if (m_loadedDictionary == null)
             return;
 
-        //GetAnswersFolderPath()
         // Answers file matches dictionary file name in Answers directory
-        string fileName = Path.GetFileNameWithoutExtension(m_loadedDictionary.FileName);
-        fileName += "_answers.json";
-        string fullName = Path.Join(GetAnswersFolderPath(), fileName);
+        string fullName = GetAnswersFilePath();
 
         if (File.Exists(fullName))
         {
@@ -170,6 +168,15 @@ public class DataService : IDataService
         _answersBuffer.Clear();
     }
 
+    private void SaveAnswers()
+    {
+        if (m_loadedDictionary == null)
+            return;
+
+        string content = JsonSerializer.Serialize(_answers);
+        File.WriteAllText(GetAnswersFilePath(), content);
+    }
+
     public IList<WordEntry> GetWords()
     {
         return _words;
@@ -191,6 +198,17 @@ public class DataService : IDataService
     {
         _words.Add(wordEntry);
         m_statistics.AddWord(wordEntry);
+    }
+
+    public void RenameWordEntry(string oldWord, WordEntry wordEntry)
+    {
+        if (oldWord != wordEntry.Word)
+            foreach (Answer answer in _answers)
+                if (answer.Word == oldWord)
+                    answer.Word = wordEntry.Word;
+
+        SaveAnswers();
+        m_statistics.RenameWord(oldWord, wordEntry);
     }
 
     public void RemoveWordEntry(WordEntry wordEntry)
@@ -368,6 +386,7 @@ public class DataService : IDataService
         File.Copy(fullPath, destinationPath);
     }
 
+
     private static string GetDictionariesFolderPath()
     {    
         return GetApplicationUserFolderPath("Dictionaries");
@@ -396,6 +415,13 @@ public class DataService : IDataService
         if (!Directory.Exists(applicationUserFolder))
             Directory.CreateDirectory(applicationUserFolder);
         return applicationUserFolder;
+    }
+
+    private string GetAnswersFilePath()
+    {
+        // Answers file matches dictionary file name in the Answers directory
+        string fileName = Path.GetFileNameWithoutExtension(m_loadedDictionary!.FileName) + "_answers.json";
+        return Path.Join(GetAnswersFolderPath(), fileName);
     }
 
     private static string SanitizeFileName(string fileName)

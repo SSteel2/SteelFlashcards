@@ -60,9 +60,14 @@ public partial class EditViewModel : ObservableObject
         }
         else
         {
+            string oldWord = m_currentEditWord.Word;
+
             m_currentEditWord.Word = NewWordText;
             m_currentEditWord.Meanings = [.. NewMeaningText.Split("; ").Where(x => !string.IsNullOrWhiteSpace(x))];
             m_currentEditWord.Tags = [.. NewTagsText.Split("; ").Where(x => !string.IsNullOrWhiteSpace(x))];
+
+            // TODO: This only informs statistics about the word change, but it doesn't update the word in the database
+            _dataService.RenameWordEntry(oldWord, m_currentEditWord);
 
             // This is stupid, I know, but I didn't find a better way of notifying the collection
             int index = _wordEntries.IndexOf(m_currentEditWord);
