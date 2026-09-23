@@ -39,4 +39,20 @@ public sealed partial class LearnPage : Page
     {
         ViewModel.SaveAnswers();
     }
+
+    private void HistoryVisibilityButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (AnswersListView.Visibility == Visibility.Visible)
+        {
+            AnswersListView.Visibility = Visibility.Collapsed;
+            HistoryColumn.Width = new GridLength(0);
+            HistoryVisibilityButton.Content = "Show History";
+        }
+        else
+        {
+            AnswersListView.Visibility = Visibility.Visible;
+            HistoryColumn.Width = new GridLength(360);
+            HistoryVisibilityButton.Content = "Hide History";
+        }
+    }
 }

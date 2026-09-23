@@ -26,7 +26,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="240"/>
             <ColumnDefinition />
-            <ColumnDefinition Width="360"/>
+            <ColumnDefinition x:Name="HistoryColumn" Width="360"/>
         </Grid.ColumnDefinitions>
         
         <!-- Left pane -->
@@ -127,7 +127,8 @@
                 </Button.KeyboardAccelerators>
             </Button>
         </StackPanel>
-        <StackPanel Grid.Column="1" Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="20">
+        <StackPanel Grid.Column="1" Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="20" Spacing="8">
+            <Button Content="Hide History" Name="HistoryVisibilityButton" Click="HistoryVisibilityButton_Click"/>
             <Button Content="Reset" Command="{x:Bind ViewModel.NewAnswersCommand}" Name="NewButton"/>
         </StackPanel>
         
