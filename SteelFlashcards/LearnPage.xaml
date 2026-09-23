@@ -109,7 +109,7 @@
                 <ColumnDefinition Width="Auto" MinWidth="83"/>
             </Grid.ColumnDefinitions>
             <TextBlock Text="Previous Word" Grid.Row="0" Grid.Column="0" VerticalAlignment="Bottom"/>
-            <TextBlock Text="{x:Bind ViewModel.LastAnswer.Word, Mode=OneWay}" Grid.Row="1" Grid.RowSpan="3" Grid.Column="0" FontSize="40"/>
+            <TextBlock Text="{x:Bind ViewModel.LastAnswer.Word, Mode=OneWay}" Grid.Row="1" Grid.RowSpan="3" Grid.Column="0" FontFamily="{StaticResource JapaneseFont}" FontSize="40"/>
             <TextBlock Text="Your Answer" Grid.Row="0" Grid.Column="1" VerticalAlignment="Bottom"/>
             <TextBlock Text="{x:Bind ViewModel.LastAnswer.Guess, Mode=OneWay}" Grid.Row="1" Grid.Column="1" FontSize="24"/>
             <TextBlock Text="Correct Answer" Grid.Row="2" Grid.Column="1" VerticalAlignment="Bottom"/>
@@ -117,7 +117,7 @@
             <TextBlock Text="{x:Bind ViewModel.LastAnswer.IsCorrect, Mode=OneWay, Converter={StaticResource BoolToIcon}}" Grid.Row="0" Grid.Column="2" Grid.RowSpan="4" FontSize="60" VerticalAlignment="Center"/>
         </Grid>
         <!--TODO: Focus on answer box on navigation to this page-->
-        <TextBlock Grid.Column="1" Grid.Row="1" Name="WordBlock" Text="{x:Bind ViewModel.CurrentWord, Mode=OneWay}" FontSize="80" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <TextBlock Grid.Column="1" Grid.Row="1" Name="WordBlock" Text="{x:Bind ViewModel.CurrentWord, Mode=OneWay}" FontFamily="{StaticResource JapaneseFont}" FontSize="80" VerticalAlignment="Center" HorizontalAlignment="Center"/>
         <StackPanel Grid.Column="1" Grid.Row="2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
             <TextBox Name="GuessBox" PlaceholderText="meaning" FontSize="40" MinWidth="600" KeyUp="GuessBox_KeyUp"/>
             <Button Command="{x:Bind ViewModel.AcceptAnswerCommand}" CommandParameter="{x:Bind GuessBox.Text, Mode=OneWay}" VerticalAlignment="Stretch" Margin="8,0,0,0" Width="66" Click="AcceptButton_Click">
@@ -171,7 +171,7 @@
                             <ColumnDefinition Width="36"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="{x:Bind Path=Order}" Grid.Column="0"/>
-                        <TextBlock Text="{x:Bind Path=Word}" Grid.Column="1"/>
+                        <TextBlock Text="{x:Bind Path=Word}" Grid.Column="1" FontFamily="{StaticResource JapaneseFont}"/>
                         <TextBlock Text="{x:Bind Path=Guess}" Grid.Column="2"/>
                         <TextBlock Text="{x:Bind Path=CorrectAnswer}" Grid.Column="3"/>
                         <TextBlock Text="{x:Bind Path=IsCorrect, Converter={StaticResource BoolToIcon}}" Grid.Column="4" HorizontalAlignment="Center"/>
