@@ -34,8 +34,8 @@
             <Grid Background="{StaticResource CardStrokeColorDefault}" Padding="20,12,20,20" CornerRadius="4">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="20"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
