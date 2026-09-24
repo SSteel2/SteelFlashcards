@@ -52,7 +52,7 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        <TextBlock Grid.Column="0" Text="{x:Bind Path=Word}" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Column="0" Text="{x:Bind Path=Word}" VerticalAlignment="Center" FontSize="24" FontFamily="{StaticResource JapaneseFont}"/>
                         <TextBlock Grid.Column="1" Text="{x:Bind Path=GetMeaningsString()}" VerticalAlignment="Center"/>
                         <ListView Grid.Column="2" SelectionMode="None" ItemsSource="{x:Bind Path=Tags}" Padding="0" Margin="0">
                             <ListView.ItemContainerStyle>
