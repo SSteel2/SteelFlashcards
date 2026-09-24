@@ -36,6 +36,7 @@
         </ItemsView>
         <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center" Margin="20" Spacing="4">
             <Button Content="Select All" FontSize="24" Click="SelectAll_Click"/>
+            <Button Content="Deselect All" FontSize="24" Click="DeselectAll_Click"/>
             <Button Command="{x:Bind ViewModel.AcceptNavigateCommand}" Style="{StaticResource AccentButtonStyle}">
                 <StackPanel Orientation="Horizontal">
                     <FontIcon Glyph="&#xE768;" FontSize="24"/>

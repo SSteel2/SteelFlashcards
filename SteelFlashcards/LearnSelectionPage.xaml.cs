@@ -40,4 +40,9 @@ public sealed partial class LearnSelectionPage : Page
     {
         TagsView.SelectAll();
     }
+
+    private void DeselectAll_Click(object sender, RoutedEventArgs e)
+    {
+        TagsView.DeselectAll();
+    }
 }
