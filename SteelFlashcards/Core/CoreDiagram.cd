@@ -1,0 +1,306 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Class Name="SteelFlashcards.Answer">
+    <Position X="12.5" Y="20.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAMAAAAAAAA=</HashCode>
+      <FileName>Core\Answer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelFlashcards.LearnPageAnswer">
+    <Position X="12.5" Y="23" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAABAAAAAAAAAAEAAAAAABAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Answer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelFlashcards.WordEntry">
+    <Position X="26.5" Y="25.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>gAEAAAAAAAAABAQAAAAAAIgAAAAAAEAAAACAAAAAAAA=</HashCode>
+      <FileName>Core\DatabaseWrapper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelFlashcards.DictionaryEntry">
+    <Position X="26.5" Y="23.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\DatabaseWrapper.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="WordEntries" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="SteelFlashcards.DictionaryFile">
+    <Position X="26.5" Y="20" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQgAAAAAIAAIAAAAAAAAIAAAgQAAABABAAAA=</HashCode>
+      <FileName>Core\DatabaseWrapper.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Content" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="SteelFlashcards.DictionaryTag">
+    <Position X="26.25" Y="9.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAACAA=</HashCode>
+      <FileName>Core\DatabaseWrapper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SteelFlashcards.DataService" BaseTypeListCollapsed="true">
+    <Position X="20.25" Y="7.5" Width="2.75" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="_answers" Type="SteelFlashcards.Answer" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="21.438" Y="8.863" />
+        <Point X="21.438" Y="21.34" />
+        <Point X="15.75" Y="21.34" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="_answersBuffer" Type="SteelFlashcards.Answer" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="20.75" Y="8.863" />
+        <Point X="20.75" Y="20.889" />
+        <Point X="15.75" Y="20.889" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="_words" Type="SteelFlashcards.WordEntry" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="22.062" Y="8.863" />
+        <Point X="22.062" Y="26.461" />
+        <Point X="26.5" Y="26.461" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="m_activeTags" Type="SteelFlashcards.DictionaryTag" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="23" Y="8.375" />
+        <Point X="23.375" Y="8.375" />
+        <Point X="23.375" Y="10.398" />
+        <Point X="26.25" Y="10.398" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="m_dictionaryFiles" Type="SteelFlashcards.DictionaryFile" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="22.688" Y="8.863" />
+        <Point X="22.688" Y="22.087" />
+        <Point X="26.5" Y="22.087" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="m_loadedDictionary" Type="SteelFlashcards.DictionaryFile" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="22.688" Y="8.863" />
+        <Point X="22.688" Y="21.081" />
+        <Point X="26.5" Y="21.081" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="m_statistics" Type="SteelFlashcards.Statistics" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="20.25" Y="8.375" />
+        <Point X="16.708" Y="8.375" Type="JumpStart" />
+        <Point X="16.542" Y="8.375" Type="JumpEnd" />
+        <Point X="12.938" Y="8.375" />
+        <Point X="12.938" Y="9.75" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AQCEAIjWAAQBAAAAAgCCACEgQ0AwARAAQABAhRAgAEA=</HashCode>
+      <FileName>Core\DataService.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="m_loadedDictionary" />
+      <Field Name="m_statistics" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Field Name="_answers" />
+      <Field Name="_answersBuffer" />
+      <Field Name="_words" />
+      <Field Name="m_activeTags" />
+      <Field Name="m_dictionaryFiles" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="SteelFlashcards.Teacher">
+    <Position X="4" Y="9.75" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACEACAAQ0AgAIAAAAAAAQIAAAAAECQAEgAAA=</HashCode>
+      <FileName>Core\Teacher.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="m_statistics" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Field Name="m_words" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="SteelFlashcards.WordStatistic">
+    <Position X="8.5" Y="14.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>QAOAgAAhAAAAAAAAAAAAAIAAQAAYAAAAQAAAAAAAACI=</HashCode>
+      <FileName>Core\Statistics.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Field Name="Answers" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="SteelFlashcards.TagStatistic" BaseTypeListCollapsed="true">
+    <Position X="14.75" Y="14.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>gAAEgAAEQCAAAQAAAAACAAAAAAAAABAAAEAAAAAgCAA=</HashCode>
+      <FileName>Core\Statistics.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Field Name="Words" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="SteelFlashcards.Statistics" BaseTypeListCollapsed="true">
+    <Position X="10.5" Y="9.75" Width="3" />
+    <AssociationLine Name="tags" Type="SteelFlashcards.TagStatistic" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="13.5" Y="12.938" />
+        <Point X="13.875" Y="12.938" />
+        <Point X="13.875" Y="14.438" />
+        <Point X="14.75" Y="14.438" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="words" Type="SteelFlashcards.WordStatistic" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="10.5" Y="12.875" />
+        <Point X="10.25" Y="12.875" />
+        <Point X="10.25" Y="14.25" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>KACEAAAIACAAAAAACAACAAAAQEgQQCAAACBAAAAAAAA=</HashCode>
+      <FileName>Core\Statistics.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Field Name="tags" />
+      <Field Name="words" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="SteelFlashcards.DictionariesViewModel">
+    <Position X="30.5" Y="1.25" Width="3" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+      <Compartment Name="Events" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AEAyAAAQAAABEAAAIAICAAAgAAAAAABAAgABAAAACQA=</HashCode>
+      <FileName>Pages\DictionariesViewModel.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Field Name="m_dictionaryFiles" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="SteelFlashcards.EditViewModel">
+    <Position X="34.25" Y="1.25" Width="3" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>EAEAAoAACAAAAAEAIAIAABAAgIAAGAQAAAADAAAgAYA=</HashCode>
+      <FileName>Pages\EditViewModel.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Field Name="_wordEntries" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="SteelFlashcards.LearnViewModel">
+    <Position X="2" Y="1.25" Width="3" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="m_statistics" Type="SteelFlashcards.Statistics" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="5" Y="2.411" />
+        <Point X="11.5" Y="2.411" />
+        <Point X="11.5" Y="9.75" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="m_words" Type="SteelFlashcards.WordEntry" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="2.621" Y="5.117" />
+        <Point X="2.621" Y="28.062" />
+        <Point X="26.5" Y="28.062" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="tags" Type="SteelFlashcards.DictionaryTag" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="5" Y="4.667" />
+        <Point X="11.417" Y="4.667" Type="JumpStart" />
+        <Point X="11.583" Y="4.667" Type="JumpEnd" />
+        <Point X="12.323" Y="4.667" Type="JumpStart" />
+        <Point X="12.49" Y="4.667" Type="JumpEnd" />
+        <Point X="16.542" Y="4.667" Type="JumpStart" />
+        <Point X="16.708" Y="4.667" Type="JumpEnd" />
+        <Point X="25.875" Y="4.667" />
+        <Point X="25.875" Y="10" />
+        <Point X="26.25" Y="10" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>IAAAAAQIEAAAAAARIAKgAIAgCABAAEEIQBRABAggAAo=</HashCode>
+      <FileName>Pages\LearnViewModel.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="m_statistics" />
+      <Field Name="m_teacher" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Field Name="answers" />
+      <Field Name="m_words" />
+      <Field Name="tags" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="SteelFlashcards.LearnSelectionViewModel">
+    <Position X="27" Y="1.25" Width="2.75" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAgAAAAIAIAAAAAAACAAEAAAAAAAAACAAg=</HashCode>
+      <FileName>Pages\LearnSelectionViewModel.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Field Name="_tags" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="SteelFlashcards.StatisticsTagViewModel">
+    <Position X="15.5" Y="1.25" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="SelectedTag" Type="SteelFlashcards.TagStatistic" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="16.625" Y="2.934" />
+        <Point X="16.625" Y="14.25" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAIAIAAAAAAAAIAAEAAAAAAAACAAA=</HashCode>
+      <FileName>Pages\StatisticsTagViewModel.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="SelectedTag" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="SteelFlashcards.StatisticsViewModel">
+    <Position X="12" Y="1.25" Width="3" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAIAIEAEAAAAAAgAAAIwAAEAAiAAA=</HashCode>
+      <FileName>Pages\StatisticsViewModel.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="m_statistics" />
+    </ShowAsAssociation>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
