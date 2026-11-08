@@ -1,0 +1,6 @@
+<Project>
+  <ItemGroup>
+    <Compile Update="$(NuGetPackageRoot)microsoft.windowsappsdk.foundation\**\DeploymentManagerAutoInitializer.cs" Visible="false" />
+    <Compile Update="$(NuGetPackageRoot)microsoft.windowsappsdk.runtime\**\WindowsAppSDK-VersionInfo.cs" Visible="false" />
+  </ItemGroup>
+</Project>
