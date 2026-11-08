@@ -21,12 +21,12 @@ public sealed partial class EditPage : Page
 
     private void EditButton_Click(object sender, RoutedEventArgs e)
     {
-        ViewModel.EditWordEntry(((WordEntry)((FrameworkElement)((FrameworkElement)e.OriginalSource).Parent).Tag).LocalId);
+        ViewModel.EditWordEntry(((WordEntry)((FrameworkElement)((FrameworkElement)e.OriginalSource).Parent).Tag).Id);
     }
 
     private void DeleteButton_Click(object sender, RoutedEventArgs e)
     {
-        ViewModel.DeleteWordEntry(((WordEntry)((FrameworkElement)((FrameworkElement)e.OriginalSource).Parent).Tag).LocalId);
+        ViewModel.DeleteWordEntry(((WordEntry)((FrameworkElement)((FrameworkElement)e.OriginalSource).Parent).Tag).Id);
     }
 
     private void NewTags_KeyUp(object sender, KeyRoutedEventArgs e)

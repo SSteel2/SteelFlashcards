@@ -52,10 +52,8 @@ public partial class EditViewModel : ObservableObject
         WordEntry changedWordEntry;
         if (m_currentEditWord == null)
         {
-            var wordEntry = new WordEntry(NewWordText, [.. NewMeaningText.Split("; ")], [.. NewTagsText.Split("; ")]);
-            _dataService.AddWordEntry(wordEntry);
-            _wordEntries.Add(wordEntry);
-            changedWordEntry = wordEntry;
+            changedWordEntry = _dataService.AddWordEntry(NewWordText, [.. NewMeaningText.Split("; ")], [.. NewTagsText.Split("; ")]);
+            _wordEntries.Add(changedWordEntry);
             m_lastUsedTags = NewTagsText;
         }
         else

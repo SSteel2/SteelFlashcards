@@ -12,7 +12,7 @@ public interface IDataService
     IList<WordEntry> GetWords();
     IList<DictionaryTag> GetActiveTags();
     void SetActiveTags(IList<DictionaryTag> tags);
-    void AddWordEntry(WordEntry wordEntry);
+    WordEntry AddWordEntry(string word, List<string> meanings, List<string> tags);
     void RenameWordEntry(string oldWordKey, WordEntry wordEntry);
     void RemoveWordEntry(WordEntry wordEntry);
     IList<Answer> GetAnswers();
@@ -194,10 +194,15 @@ public class DataService : IDataService
         m_activeTags.AddRange(tags);
     }
 
-    public void AddWordEntry(WordEntry wordEntry)
+    public WordEntry AddWordEntry(string word, List<string> meanings, List<string> tags)
     {
-        _words.Add(wordEntry);
+        // Should never happen
+        if (m_loadedDictionary == null)
+            throw new ApplicationException("Loaded dictionary is null in AddWordEntry method");
+
+        var wordEntry = m_loadedDictionary.Content.NewWordEntry(word, meanings, tags);
         m_statistics.AddWord(wordEntry);
+        return wordEntry;
     }
 
     public void RenameWordEntry(string oldWord, WordEntry wordEntry)

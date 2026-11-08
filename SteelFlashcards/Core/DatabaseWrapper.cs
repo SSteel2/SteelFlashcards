@@ -6,12 +6,10 @@ namespace SteelFlashcards;
 
 public class WordEntry(string word, List<string> meanings, List<string> tags)
 {
+    [JsonPropertyName("id")] public int Id { get; set; } = -1;
     [JsonPropertyName("word")] public string Word { get; set; } = word;
     [JsonPropertyName("meanings")] public List<string> Meanings { get; set; } = meanings;
     [JsonPropertyName("tags")] public List<string> Tags { get; set; } = tags;
-
-    private static int s_currentId = 0;
-    [JsonIgnore] public int LocalId { get; } = s_currentId++;
 
     public string GetMeaningsString()
     {
@@ -27,7 +25,7 @@ public class WordEntry(string word, List<string> meanings, List<string> tags)
     public static WordEntry? FindWordEntry(IList<WordEntry> words, int id)
     {
         foreach (WordEntry word in words)
-            if (word.LocalId == id) 
+            if (word.Id == id) 
                 return word;
         return null;
     }
@@ -39,6 +37,54 @@ public class DictionaryEntry(string name, List<WordEntry> wordEntries)
     public string Name { get; set; } = name;
     [JsonPropertyName("words")]
     public List<WordEntry> WordEntries { get; set; } = wordEntries;
+
+    public WordEntry NewWordEntry(string word, List<string> meanings, List<string> tags)
+    {
+        var wordEntry = new WordEntry(word, meanings, tags)
+        {
+            Id = FindMaxId() + 1
+        };
+        WordEntries.Add(wordEntry);
+        return wordEntry;
+    }
+
+    public bool ContainsDuplicates()
+    {
+        HashSet<string> duplicateCheck = [];
+        foreach (var entry in WordEntries)
+        {
+            if (!duplicateCheck.Add(entry.Word))
+                return true;
+        }
+        return false;
+    }
+
+    public bool SanitizeIds()
+    {
+        int nextId = FindMaxId() + 1;
+        bool changed = false;
+        HashSet<int> allIds = [];
+        foreach (var entry in WordEntries)
+        {
+            if (entry.Id == -1 || !allIds.Add(entry.Id))
+            {
+                entry.Id = nextId++;
+                changed = true;
+            }
+        }
+        return changed;
+    }
+
+    private int FindMaxId()
+    {
+        int maxId = -1;
+        foreach (var entry in WordEntries)
+        {
+            if (entry.Id > maxId)
+                maxId = entry.Id;
+        }
+        return maxId;
+    }
 }
 
 public partial class DictionaryFile : ObservableObject
@@ -57,16 +103,7 @@ public partial class DictionaryFile : ObservableObject
     {
         Content = content;
         DictionaryName = content.Name;
-        IsPristine = true;
-        HashSet<string> duplicateCheck = [];
-        foreach (var entry in Content.WordEntries)
-        {
-            if (!duplicateCheck.Add(entry.Word))
-            {
-                IsPristine = false;
-                break;
-            }
-        }
+        IsPristine = !Content.SanitizeIds() && !Content.ContainsDuplicates();
     }
 
     // Calculated on the fly, not stored in memory (TODO: yet)
