@@ -7,30 +7,6 @@
     <ActiveDebugProfile>SteelFlashcards (Package)</ActiveDebugProfile>
   </PropertyGroup>
   <ItemGroup>
-    <None Update="App.xaml">
-      <SubType>Designer</SubType>
-    </None>
-    <Page Update="StatisticsTagPage.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="StatisticsPage.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="LearnSelectionPage.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="DictionariesPage.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="EditPage.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="LearnPage.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <None Update="MainWindow.xaml">
-      <SubType>Designer</SubType>
-    </None>
     <None Update="Package.appxmanifest">
       <SubType>Designer</SubType>
     </None>
