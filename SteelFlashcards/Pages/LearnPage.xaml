@@ -8,7 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:converters="using:CommunityToolkit.WinUI.Converters"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    Background="{ThemeResource SolidBackgroundFillColorBaseBrush}"
     Unloaded="Page_Unloaded">
 
     <Page.Resources>
@@ -134,7 +134,7 @@
         
         <!-- Right pane -->
         <!-- TODO: Some static resource background color -->
-        <ListView Grid.Column="2" Grid.Row="0" Grid.RowSpan="4" x:Name="AnswersListView" Background="LightGray" ItemsSource="{x:Bind ViewModel.Answers}">
+        <ListView Grid.Column="2" Grid.Row="0" Grid.RowSpan="4" x:Name="AnswersListView" Background="{StaticResource SolidBackgroundFillColorSecondaryBrush}" ItemsSource="{x:Bind ViewModel.Answers}">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="MinHeight" Value="0"/>
