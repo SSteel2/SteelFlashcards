@@ -16,6 +16,7 @@ public partial class LearnViewModel : ObservableObject
     private readonly INavigationService _navigationService;
 
     [ObservableProperty] public partial string? CurrentWord { get; set; }
+    [ObservableProperty] public partial string Guess { get; set; }
     [ObservableProperty] [NotifyPropertyChangedFor(nameof(AllWordsMastered))] public partial int? WordCount { get; set; }
     [ObservableProperty] [NotifyPropertyChangedFor(nameof(AllWordsMastered))] public partial int? MasteryCount { get; set; }
     public bool AllWordsMastered => WordCount is int count && count > 0 && MasteryCount == count;
@@ -60,13 +61,13 @@ public partial class LearnViewModel : ObservableObject
     }
 
     [RelayCommand]
-    public void AcceptAnswer(string guess)
+    public void AcceptAnswer()
     {
         // Should never be null, will be removed once design changes
         if (m_currentWordEntry == null)
             return;
 
-        LearnPageAnswer answer = CreateAnswer(guess);
+        LearnPageAnswer answer = CreateAnswer(Guess);
         answers.Add(answer);
         _dataService.AddAnswer(answer);
         LastAnswer = answer;
@@ -74,6 +75,7 @@ public partial class LearnViewModel : ObservableObject
         // TODO: Very inefficient, but will do for now
         CalculateMasteryCount();
         SetNextWord();
+        Guess = string.Empty;
     }
 
     [RelayCommand]

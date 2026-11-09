@@ -119,8 +119,9 @@
         <!--TODO: Focus on answer box on navigation to this page-->
         <TextBlock Grid.Column="1" Grid.Row="1" Name="WordBlock" Text="{x:Bind ViewModel.CurrentWord, Mode=OneWay}" FontFamily="{StaticResource JapaneseFont}" FontSize="80" VerticalAlignment="Center" HorizontalAlignment="Center"/>
         <StackPanel Grid.Column="1" Grid.Row="2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
-            <TextBox Name="GuessBox" PlaceholderText="meaning" FontSize="40" MinWidth="600" KeyUp="GuessBox_KeyUp"/>
-            <Button Command="{x:Bind ViewModel.AcceptAnswerCommand}" CommandParameter="{x:Bind GuessBox.Text, Mode=OneWay}" VerticalAlignment="Stretch" Margin="8,0,0,0" Width="66" Click="AcceptButton_Click">
+            <TextBox Name="GuessBox" PlaceholderText="meaning" FontSize="40" MinWidth="600" KeyUp="GuessBox_KeyUp"
+                     Text="{x:Bind ViewModel.Guess, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <Button Command="{x:Bind ViewModel.AcceptAnswerCommand}" VerticalAlignment="Stretch" Margin="8,0,0,0" Width="66">
                 <SymbolIcon Symbol="Forward"/>
                 <Button.KeyboardAccelerators>
                     <KeyboardAccelerator Key="Enter"/>

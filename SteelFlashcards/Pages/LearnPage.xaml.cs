@@ -3,6 +3,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using System;
+using System.Collections.Specialized;
 
 namespace SteelFlashcards;
 
@@ -17,26 +18,26 @@ public sealed partial class LearnPage : Page
     {
         ViewModel = (App.ServiceProvider?.GetService<LearnViewModel>()) ?? throw new ApplicationException("Dev: Missing MainViewModel Service");
         InitializeComponent();
+        ViewModel.Answers.CollectionChanged += Answers_CollectionChanged;
+    }
+
+    private void Answers_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (e.Action != NotifyCollectionChangedAction.Add || e.NewItems is not { Count: > 0 })
+            return;
+
+        DispatcherQueue.TryEnqueue(() => AnswersListView.ScrollIntoView(e.NewItems[^1]));
     }
 
     private void GuessBox_KeyUp(object sender, KeyRoutedEventArgs e)
     {
         if (e.Key == Windows.System.VirtualKey.Enter)
-        {
-            ViewModel.AcceptAnswer(((TextBox)sender).Text);
-            ((TextBox)sender).Text = string.Empty;
-            AnswersListView.ScrollIntoView(AnswersListView.Items[^1]);
-        }
-    }
-
-    private void AcceptButton_Click(object sender, RoutedEventArgs e)
-    {
-        if (AnswersListView.Items.Count > 0)
-            AnswersListView.ScrollIntoView(AnswersListView.Items[^1]);
+            ViewModel.AcceptAnswerCommand.Execute(null);
     }
 
     private void Page_Unloaded(object sender, RoutedEventArgs e)
     {
+        ViewModel.Answers.CollectionChanged -= Answers_CollectionChanged;
         ViewModel.SaveAnswers();
     }
 
